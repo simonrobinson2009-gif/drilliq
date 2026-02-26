@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DrillIQ — 01 The Basic Wall Pass</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div id="card"><svg id="mainSVG" width="405" height="720"></svg></div>
+<div id="controls">
+  <button class="btn-play" id="btnPlay">▶ PLAY</button>
+  <button class="btn-reset" id="btnReset">↺ RESET</button>
+  <span class="speed-label">SPEED</span>
+  <button class="btn-speed" data-speed="0.5">0.5x</button>
+  <button class="btn-speed active" data-speed="1">1x</button>
+  <button class="btn-speed" data-speed="1.5">1.5x</button>
+</div>
+<script src="../assets/engine.js"></script>
+<script>
+runDrill({
+  // ── Branding ──
+  drillNum:    "01",
+  drillCat:    "PASSING",
+  title1:      "THE BASIC",
+  title2:      "WALL PASS",
+  meta:        ["2 PLAYERS", "10 MIN", "PASSING"],
+  seriesLabel: "SERIES 1 OF 3",
+  phaseDots:   3,
+  goalThreshold: 0.87,
+
+  // ── Players ──
+  players: [
+    { label:"1", color:"#FF6B35" },
+    { label:"2", color:"#B4FF50" },
+  ],
+
+  // ── Start position rings (pitch coords, x:0-365, y:0-280) ──
+  startPositions: [
+    { x:80,  y:140 }, // P1
+    { x:230, y:80  }, // P2
+  ],
+
+  // ── Cone gate flanking goal mouth ──
+  coneGate: [
+    { x:350, y:112 },
+    { x:350, y:168 },
+  ],
+
+  // ── Ball start position ──
+  startBall: { x:80, y:140 },
+
+  // ── Phase states ──
+  states: {
+    phase0: {
+      label: "P1 passes to P2",
+      players: [ {x:80,y:140}, {x:230,y:80} ],
+      ball: {x:80,y:140},
+      arrows: [
+        { from:0, to:1,                    dashed:false, color:"#B4FF50" },
+        { from:0, to:{x:290,y:140},        dashed:true,  color:"#FF6B35" },
+      ],
+    },
+    phase1: {
+      label: "P2 returns first time",
+      players: [ {x:185,y:140}, {x:230,y:80} ],
+      ball: {x:230,y:80},
+      arrows: [
+        { from:1, to:{x:295,y:138},        dashed:false, color:"#FF6B35" },
+        { from:0, to:{x:310,y:138},        dashed:true,  color:"#FF6B35" },
+      ],
+    },
+    phase2: {
+      label: "P1 runs onto it & shoots!",
+      players: [ {x:310,y:138}, {x:255,y:90} ],
+      ball: {x:310,y:138},
+      arrows: [
+        { from:0, to:{x:375,y:140},        dashed:false, color:"#FF6B35" },
+      ],
+    },
+    phase3: {
+      label: "GOAL!",
+      players: [ {x:310,y:138}, {x:255,y:90} ],
+      ball: {x:378,y:140},
+      arrows: [],
+    },
+  },
+
+  // ── Segments (move + pause duration in ms) ──
+  segments: [
+    { from:"phase0", to:"phase1", moveDuration:1600, pauseDuration:500 },
+    { from:"phase1", to:"phase2", moveDuration:1600, pauseDuration:500 },
+    { from:"phase2", to:"phase3", moveDuration:1100, pauseDuration:900 },
+  ],
+});
+</script>
+</body>
+</html>
