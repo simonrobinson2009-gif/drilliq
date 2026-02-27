@@ -294,7 +294,7 @@ function runDrill(config){
     }
     dl.appendChild(clip);
 
-    document.getElementById("goalOverlay").setAttribute("opacity",isGoal?1:0);
+    document.getElementById("goalOverlay").setAttribute("opacity",0);
 
     // step dots
     const t=elapsed%totalDuration;
