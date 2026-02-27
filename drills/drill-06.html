@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DrillIQ — 06 Find the Free Man</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div id="card"><svg id="mainSVG" width="405" height="720"></svg></div>
+<div id="controls">
+  <button class="btn-play" id="btnPlay">&#9654; PLAY</button>
+  <button class="btn-reset" id="btnReset">&#8635; RESET</button>
+  <span class="speed-label">SPEED</span>
+  <button class="btn-speed" data-speed="0.5">0.5x</button>
+  <button class="btn-speed active" data-speed="1">1x</button>
+  <button class="btn-speed" data-speed="1.5">1.5x</button>
+</div>
+<script src="../assets/engine.js"></script>
+<script>
+runDrill({
+  drillNum:"06", drillCat:"DECISION MAKING", title1:"FIND THE", title2:"FREE MAN",
+  meta:["5 PLAYERS","20 MIN","ADVANCED"], seriesLabel:"SERIES 3 OF 3",
+  phaseDots:3, goalThreshold:0.87,
+  players:[{label:"1",color:"#FF6B35"},{label:"2",color:"#B4FF50"},{label:"3",color:"#7aaff0"},{label:"D1",color:"#FF3B5C"},{label:"D2",color:"#FF3B5C"}],
+  startPositions:[{x:70,y:140},{x:175,y:90},{x:175,y:225},{x:220,y:92},{x:215,y:155}],
+  coneGate:[{x:350,y:112},{x:350,y:168}],
+  startBall:{x:70,y:140},
+  states:{
+    phase0:{label:"P2 runs — draws the defender",players:[{x:70,y:140},{x:175,y:90},{x:175,y:225},{x:220,y:92},{x:215,y:155}],ball:{x:70,y:140},
+      arrows:[{from:1,to:{x:248,y:88},dashed:true,color:"#B4FF50"},{from:2,to:{x:260,y:218},dashed:true,color:"#7aaff0"},{from:0,to:{x:182,y:140},dashed:true,color:"#FF6B35"}]},
+    phase1:{label:"D2 ball-watches — P3 is free!",players:[{x:180,y:140},{x:245,y:88},{x:260,y:218},{x:248,y:90},{x:228,y:150}],ball:{x:180,y:140},
+      arrows:[{from:0,to:2,dashed:false,color:"#7aaff0"},{from:2,to:{x:315,y:210},dashed:true,color:"#7aaff0"}]},
+    phase2:{label:"P3 wide & free — shoots!",players:[{x:210,y:140},{x:268,y:88},{x:315,y:210},{x:268,y:92},{x:248,y:152}],ball:{x:315,y:210},
+      arrows:[{from:2,to:{x:375,y:140},dashed:false,color:"#7aaff0"}]},
+    phase3:{label:"GOAL!",players:[{x:210,y:140},{x:268,y:88},{x:315,y:210},{x:268,y:92},{x:248,y:152}],ball:{x:378,y:140},arrows:[]},
+  },
+  segments:[
+    {from:"phase0",to:"phase1",moveDuration:1800,pauseDuration:500},
+    {from:"phase1",to:"phase2",moveDuration:1500,pauseDuration:500},
+    {from:"phase2",to:"phase3",moveDuration:1000,pauseDuration:900},
+  ],
+});
+</script>
+</body>
+</html>
