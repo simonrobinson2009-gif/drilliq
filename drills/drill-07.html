@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DrillIQ — 07 Near Post Run</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div id="card"><svg id="mainSVG" width="405" height="720"></svg></div>
+<div id="controls">
+  <button class="btn-play" id="btnPlay">&#9654; PLAY</button>
+  <button class="btn-reset" id="btnReset">&#8635; RESET</button>
+  <span class="speed-label">SPEED</span>
+  <button class="btn-speed" data-speed="0.5">0.5x</button>
+  <button class="btn-speed active" data-speed="1">1x</button>
+  <button class="btn-speed" data-speed="1.5">1.5x</button>
+</div>
+<script src="../assets/engine.js"></script>
+<script>
+runDrill({
+  drillNum:"07", drillCat:"FINISHING", title1:"NEAR POST", title2:"RUN",
+  meta:["2 PLAYERS","10 MIN","FINISHING"], seriesLabel:"SERIES 1 OF 3",
+  phaseDots:2, goalThreshold:0.87,
+  players:[{label:"1",color:"#FF6B35"},{label:"2",color:"#B4FF50"}],
+  startPositions:[{x:240,y:245},{x:182,y:140}],
+  coneGate:[{x:350,y:112},{x:350,y:168}],
+  startBall:{x:240,y:245},
+  states:{
+    phase0:{label:"P2 runs — P1 delivers simultaneously",players:[{x:240,y:245},{x:182,y:140}],ball:{x:240,y:245},
+      arrows:[{from:1,to:{x:345,y:168},dashed:true,color:"#B4FF50"},{from:0,to:{x:345,y:168},dashed:false,color:"#FF6B35"}]},
+    phase1:{label:"P2 & ball arrive together — finish!",players:[{x:240,y:245},{x:345,y:168}],ball:{x:345,y:168},
+      arrows:[{from:1,to:{x:375,y:155},dashed:false,color:"#B4FF50"}]},
+    phase2:{label:"GOAL!",players:[{x:240,y:245},{x:345,y:168}],ball:{x:378,y:155},arrows:[]},
+  },
+  segments:[
+    {from:"phase0",to:"phase1",moveDuration:1800,pauseDuration:500},
+    {from:"phase1",to:"phase2",moveDuration:1000,pauseDuration:900},
+  ],
+});
+</script>
+</body>
+</html>

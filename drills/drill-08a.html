@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DrillIQ — 08a Far Post Attack Other Side</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div id="card"><svg id="mainSVG" width="405" height="720"></svg></div>
+<div id="controls">
+  <button class="btn-play" id="btnPlay">&#9654; PLAY</button>
+  <button class="btn-reset" id="btnReset">&#8635; RESET</button>
+  <span class="speed-label">SPEED</span>
+  <button class="btn-speed" data-speed="0.5">0.5x</button>
+  <button class="btn-speed active" data-speed="1">1x</button>
+  <button class="btn-speed" data-speed="1.5">1.5x</button>
+</div>
+<script src="../assets/engine.js"></script>
+<script>
+runDrill({
+  drillNum:"08a", drillCat:"FINISHING", title1:"FAR POST", title2:"ATTACK (B)",
+  meta:["4 PLAYERS","15 MIN","FINISHING"], seriesLabel:"SERIES 2 OF 3",
+  phaseDots:3, goalThreshold:0.87,
+  players:[{label:"1",color:"#FF6B35"},{label:"2",color:"#B4FF50"},{label:"3",color:"#7aaff0"},{label:"D",color:"#FF3B5C"}],
+  startPositions:[{x:240,y:35},{x:200,y:120},{x:200,y:165},{x:260,y:130}],
+  coneGate:[{x:350,y:112},{x:350,y:168}],
+  startBall:{x:240,y:35},
+  states:{
+    phase0:{label:"P2 near post decoy, P3 far post run",players:[{x:240,y:35},{x:200,y:120},{x:200,y:165},{x:260,y:130}],ball:{x:240,y:35},
+      arrows:[{from:1,to:{x:340,y:112},dashed:true,color:"#B4FF50"},{from:2,to:{x:305,y:162},dashed:true,color:"#7aaff0"},{from:0,to:{x:285,y:35},dashed:true,color:"#FF6B35"}]},
+    phase1:{label:"D tracks P2 — P3 is free!",players:[{x:285,y:35},{x:340,y:112},{x:305,y:162},{x:340,y:108}],ball:{x:285,y:35},
+      arrows:[{from:0,to:2,dashed:false,color:"#7aaff0"},{from:2,to:{x:345,y:165},dashed:true,color:"#7aaff0"}]},
+    phase2:{label:"P3 finishes at far post!",players:[{x:285,y:35},{x:342,y:112},{x:345,y:165},{x:342,y:108}],ball:{x:345,y:165},
+      arrows:[{from:2,to:{x:375,y:152},dashed:false,color:"#7aaff0"}]},
+    phase3:{label:"GOAL!",players:[{x:285,y:35},{x:342,y:112},{x:345,y:165},{x:342,y:108}],ball:{x:378,y:152},arrows:[]},
+  },
+  segments:[
+    {from:"phase0",to:"phase1",moveDuration:1800,pauseDuration:500},
+    {from:"phase1",to:"phase2",moveDuration:1500,pauseDuration:500},
+    {from:"phase2",to:"phase3",moveDuration:1000,pauseDuration:900},
+  ],
+});
+</script>
+</body>
+</html>
