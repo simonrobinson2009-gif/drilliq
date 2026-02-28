@@ -1,0 +1,3317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>DrillIQ — U8/U10 Coaching Pack</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --pitch:#0a1a0f; --surface:#111c14; --card:#162019; --border:#1e3022;
+  --orange:#FF6B35; --lime:#B4FF50; --white:#f0f4f0; --muted:#6b8c6e; --red:#FF3B5C;
+}
+html,body{background:var(--pitch);color:var(--white);font-family:"Barlow",sans-serif;min-height:100vh;overflow-x:hidden;}
+.app-header{background:var(--surface);border-bottom:2px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.app-logo{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:22px;letter-spacing:.08em;color:var(--white);}
+.app-logo span{color:var(--orange);}
+.age-badge{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:12px;letter-spacing:.12em;color:var(--lime);background:rgba(180,255,80,.1);border:1px solid rgba(180,255,80,.3);padding:4px 10px;border-radius:20px;}
+.drill-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;overflow-x:auto;scrollbar-width:none;}
+.drill-nav::-webkit-scrollbar{display:none;}
+.drill-pill{flex-shrink:0;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;padding:6px 14px;border-radius:20px;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.drill-pill.active{background:var(--orange);border-color:var(--orange);color:#000;}
+.drill-pill:hover:not(.active){border-color:var(--orange);color:var(--orange);}
+.drill-view{max-width:480px;margin:0 auto;padding:20px 16px 100px;}
+.drill-header{margin-bottom:16px;}
+.drill-meta-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.drill-num{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:13px;letter-spacing:.15em;color:var(--orange);}
+.drill-cat-badge{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:11px;letter-spacing:.12em;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:10px;}
+.drill-title{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:32px;line-height:1;letter-spacing:.03em;color:var(--white);text-transform:uppercase;}
+.drill-specs{display:flex;gap:16px;margin-top:8px;}
+.spec{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:.04em;}
+.spec strong{color:var(--white);font-weight:600;}
+.anim-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;}
+.anim-wrap{display:flex;justify-content:center;padding:12px 12px 0;}
+.anim-wrap svg{width:100%;max-width:360px;height:auto;}
+.anim-controls{display:flex;align-items:center;gap:8px;padding:12px;border-top:1px solid var(--border);}
+.ctrl-btn{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;transition:all .15s;}
+.ctrl-play{background:var(--orange);color:#000;flex:1;}
+.ctrl-play:hover{background:#ff8555;}
+.ctrl-reset{background:var(--border);color:var(--white);padding:8px 12px;}
+.speed-group{display:flex;gap:4px;margin-left:auto;}
+.speed-btn{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:11px;padding:6px 8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+.speed-btn.active{background:var(--border);color:var(--white);}
+.coaching-tabs{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;}
+.tab-bar{display:flex;border-bottom:1px solid var(--border);}
+.tab-btn{flex:1;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:12px;letter-spacing:.1em;padding:12px 6px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.tab-btn.active{color:var(--orange);border-bottom-color:var(--orange);}
+.tab-btn:hover:not(.active){color:var(--white);}
+.tab-panel{display:none;padding:16px;}
+.tab-panel.active{display:block;}
+.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.setup-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.setup-label{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:10px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:3px;}
+.setup-value{font-weight:600;font-size:14px;color:var(--white);}
+.setup-section-title{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:12px;letter-spacing:.12em;color:var(--orange);text-transform:uppercase;margin:14px 0 8px;}
+.setup-desc{font-size:13px;color:#a8c4ab;line-height:1.7;margin-bottom:10px;}
+.setup-list{list-style:none;}
+.setup-list li{font-size:13px;color:#a8c4ab;line-height:1.6;padding:4px 0 4px 14px;position:relative;}
+.setup-list li::before{content:"–";position:absolute;left:0;color:var(--muted);}
+.cue-list{list-style:none;}
+.cue-item{padding:14px 0;border-bottom:1px solid var(--border);}
+.cue-item:last-child{border-bottom:none;}
+.cue-phase{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:11px;letter-spacing:.12em;color:var(--orange);display:block;margin-bottom:5px;}
+.cue-text{font-size:13px;color:#a8c4ab;line-height:1.65;display:block;margin-bottom:6px;}
+.cue-quote{display:block;font-style:italic;color:var(--lime);font-size:13px;line-height:1.5;padding:8px 12px;background:rgba(180,255,80,.06);border-left:2px solid var(--lime);border-radius:0 6px 6px 0;margin-top:6px;}
+.cue-note{display:block;font-size:12px;color:var(--muted);line-height:1.5;margin-top:6px;font-style:italic;}
+.prog-list{list-style:none;}
+.prog-item{padding:14px 0;border-bottom:1px solid var(--border);}
+.prog-item:last-child{border-bottom:none;}
+.prog-header{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;}
+.prog-num{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:22px;color:var(--border);flex-shrink:0;line-height:1;}
+.prog-title{font-weight:700;font-size:14px;color:var(--white);}
+.prog-signal{display:inline-block;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:10px;letter-spacing:.1em;padding:2px 8px;border-radius:10px;margin-bottom:6px;}
+.prog-signal.ready{background:rgba(180,255,80,.12);color:var(--lime);border:1px solid rgba(180,255,80,.25);}
+.prog-signal.challenge{background:rgba(255,107,53,.12);color:var(--orange);border:1px solid rgba(255,107,53,.25);}
+.prog-desc{font-size:13px;color:#a8c4ab;line-height:1.65;margin-bottom:6px;}
+.prog-why{font-size:12px;color:var(--muted);line-height:1.5;font-style:italic;}
+.mistake-list{list-style:none;}
+.mistake-item{padding:14px 0;border-bottom:1px solid var(--border);}
+.mistake-item:last-child{border-bottom:none;}
+.mistake-problem{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px;}
+.mistake-dot{width:7px;height:7px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:4px;}
+.mistake-label{font-weight:700;font-size:13px;color:var(--white);line-height:1.4;}
+.mistake-cause{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:7px;padding-left:15px;font-style:italic;}
+.mistake-fix{font-size:13px;color:#a8c4ab;line-height:1.65;padding:8px 12px;background:rgba(255,107,53,.06);border-left:2px solid var(--orange);border-radius:0 6px 6px 0;}
+.fix-label{color:var(--orange);font-weight:700;}
+.drill-footer{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:2px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100;}
+.nav-btn{font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:14px;letter-spacing:.1em;padding:12px 20px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--white);cursor:pointer;transition:all .15s;flex:1;text-align:center;}
+.nav-btn:hover{border-color:var(--orange);color:var(--orange);}
+.nav-btn.next{background:var(--orange);border-color:var(--orange);color:#000;}
+.nav-btn.next:hover{background:#ff8555;}
+.nav-btn:disabled{opacity:.3;pointer-events:none;}
+.nav-progress{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13px;color:var(--muted);letter-spacing:.08em;text-align:center;flex-shrink:0;}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="app-logo">DRILL<span>IQ</span></div>
+  <div class="age-badge">U8 / U10 PACK</div>
+</header>
+<nav class="drill-nav" id="drillNav"></nav>
+<main class="drill-view">
+  <div class="drill-header">
+    <div class="drill-meta-row">
+      <span class="drill-num" id="drillNum"></span>
+      <span class="drill-cat-badge" id="drillCat"></span>
+    </div>
+    <div class="drill-title" id="drillTitle"></div>
+    <div class="drill-specs">
+      <span class="spec"><strong id="specPlayers"></strong> PLAYERS</span>
+      <span class="spec"><strong id="specTime"></strong> MIN</span>
+      <span class="spec" id="specType"></span>
+    </div>
+  </div>
+  <div class="anim-card">
+    <div class="anim-wrap"><svg id="mainSVG" width="405" height="720" viewBox="0 0 405 720"></svg></div>
+    <div class="anim-controls">
+      <button class="ctrl-btn ctrl-play" id="btnPlay">▶ PLAY</button>
+      <button class="ctrl-btn ctrl-reset" id="btnReset">↺</button>
+      <div class="speed-group">
+        <button class="speed-btn" data-speed="0.5">0.5×</button>
+        <button class="speed-btn active" data-speed="1">1×</button>
+        <button class="speed-btn" data-speed="1.5">1.5×</button>
+      </div>
+    </div>
+  </div>
+  <div class="coaching-tabs">
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="setup">SETUP</button>
+      <button class="tab-btn" data-tab="cues">CUES</button>
+      <button class="tab-btn" data-tab="progressions">PROGRESS</button>
+      <button class="tab-btn" data-tab="mistakes">MISTAKES</button>
+    </div>
+    <div class="tab-panel active" id="tab-setup"></div>
+    <div class="tab-panel" id="tab-cues"></div>
+    <div class="tab-panel" id="tab-progressions"></div>
+    <div class="tab-panel" id="tab-mistakes"></div>
+  </div>
+</main>
+<footer class="drill-footer">
+  <button class="nav-btn prev" id="btnPrev" disabled>← PREV</button>
+  <div class="nav-progress" id="navProgress"></div>
+  <button class="nav-btn next" id="btnNext">NEXT →</button>
+</footer>
+<script>
+// ─── DrillIQ Animation Engine ───────────────────────────────────────────────
+// Shared by all drill pages. Do not edit unless changing core behaviour.
+
+const W=405,H=720,PITCH_X=20,PITCH_Y=210,PITCH_W=365,PITCH_H=280,PLAYER_R=13;
+
+function lerp(a,b,t){return a+(b-a)*t;}
+function easeInOut(t){return t<0.5?2*t*t:-1+(4-2*t)*t;}
+function toCanvas(pt){return{x:PITCH_X+pt.x,y:PITCH_Y+pt.y};}
+
+function buildSegMeta(segments){
+  let total=0;
+  return segments.map(seg=>{
+    const start=total,moveEnd=start+seg.moveDuration,end=moveEnd+seg.pauseDuration;
+    total=end;
+    return{...seg,start,moveEnd,end};
+  });
+}
+
+function interpState(sA,sB,localT){
+  const et=easeInOut(Math.max(0,Math.min(1,localT)));
+  let arrowOpacity,arrows;
+  if(localT<0.38){arrowOpacity=1;arrows=sA.arrows;}
+  else if(localT<0.52){arrowOpacity=Math.max(0,1-(localT-0.38)/0.14);arrows=sA.arrows;}
+  else{arrows=sB.arrows;arrowOpacity=Math.min(1,(localT-0.52)/0.2);}
+  return{
+    label:localT<0.5?sA.label:sB.label,
+    players:sA.players.map((p,i)=>({x:lerp(p.x,sB.players[i].x,et),y:lerp(p.y,sB.players[i].y,et)})),
+    ball:{x:lerp(sA.ball.x,sB.ball.x,et),y:lerp(sA.ball.y,sB.ball.y,et)},
+    arrows,arrowOpacity,isPause:false
+  };
+}
+
+function getAnimState(elapsedMs,states,segMeta,totalDuration){
+  const t=elapsedMs%totalDuration;
+  for(const seg of segMeta){
+    if(t>=seg.start&&t<seg.end){
+      const sA=states[seg.from],sB=states[seg.to];
+      if(t<seg.moveEnd)return interpState(sA,sB,(t-seg.start)/seg.moveDuration);
+      return{...sB,arrowOpacity:1,isPause:true};
+    }
+  }
+  return{...states[Object.keys(states)[0]],arrowOpacity:1,isPause:false};
+}
+
+function resolvePoint(ref,players){
+  return typeof ref==="number"?toCanvas(players[ref]):toCanvas(ref);
+}
+
+function svgEl(tag,attrs,text){
+  const el=document.createElementNS("http://www.w3.org/2000/svg",tag);
+  for(const[k,v]of Object.entries(attrs))el.setAttribute(k,v);
+  if(text!==undefined)el.textContent=text;
+  return el;
+}
+
+function drawArrow(parent,arrow,players,opacity){
+  const rF=resolvePoint(arrow.from,players),rT=resolvePoint(arrow.to,players);
+  const dx=rT.x-rF.x,dy=rT.y-rF.y,dist=Math.sqrt(dx*dx+dy*dy)||1;
+  const ux=dx/dist,uy=dy/dist;
+  const s=typeof arrow.from==="number"?PLAYER_R+1:0;
+  const e=typeof arrow.to==="number"?PLAYER_R+1:0;
+  const x1=rF.x+ux*s,y1=rF.y+uy*s,x2=rT.x-ux*e,y2=rT.y-uy*e;
+  const hs=9,ex=x2-ux*hs,ey=y2-uy*hs,px=-uy*hs*0.5,py=ux*hs*0.5;
+  const g=document.createElementNS("http://www.w3.org/2000/svg","g");
+  g.setAttribute("opacity",opacity);
+  const line=document.createElementNS("http://www.w3.org/2000/svg","line");
+  line.setAttribute("x1",x1);line.setAttribute("y1",y1);line.setAttribute("x2",ex);line.setAttribute("y2",ey);
+  line.setAttribute("stroke",arrow.color);line.setAttribute("stroke-width",arrow.dashed?"1.6":"2.5");
+  if(arrow.dashed)line.setAttribute("stroke-dasharray","6 4");
+  line.setAttribute("stroke-linecap","round");
+  g.appendChild(line);
+  if(!arrow.dashed){
+    const poly=document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    poly.setAttribute("points",`${x2},${y2} ${ex+px},${ey+py} ${ex-px},${ey-py}`);
+    poly.setAttribute("fill",arrow.color);g.appendChild(poly);
+  } else {
+    const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c.setAttribute("cx",x2);c.setAttribute("cy",y2);c.setAttribute("r",3);c.setAttribute("fill",arrow.color);g.appendChild(c);
+  }
+  parent.appendChild(g);
+}
+
+function drawBall(parent,x,y,spinAngle){
+  const r=9;
+  parent.appendChild(svgEl("ellipse",{cx:x+2,cy:y+r+1,rx:r*0.75,ry:2.5,fill:"rgba(0,0,0,0.35)"}));
+  parent.appendChild(svgEl("circle",{cx:x,cy:y,r,fill:"#f0f0f0"}));
+  const rot=document.createElementNS("http://www.w3.org/2000/svg","g");
+  rot.setAttribute("transform",`rotate(${spinAngle},${x},${y})`);
+  rot.appendChild(svgEl("circle",{cx:x,cy:y,r:3,fill:"#111"}));
+  [0,72,144,216,288].forEach(deg=>{
+    const rad=deg*Math.PI/180,px2=x+Math.cos(rad)*5.5,py2=y+Math.sin(rad)*5.5;
+    const el=svgEl("ellipse",{cx:px2,cy:py2,rx:2.2,ry:1.5,fill:"#111"});
+    el.setAttribute("transform",`rotate(${deg},${px2},${py2})`);rot.appendChild(el);
+  });
+  parent.appendChild(rot);
+  parent.appendChild(svgEl("circle",{cx:x,cy:y,r,fill:"none",stroke:"#222","stroke-width":"0.8"}));
+  parent.appendChild(svgEl("circle",{cx:x-3,cy:y-3,r:2.2,fill:"rgba(255,255,255,0.55)"}));
+}
+
+function drawPlayer(parent,cx,cy,color,label){
+  parent.appendChild(svgEl("circle",{cx:cx+1.5,cy:cy+2.5,r:PLAYER_R,fill:"rgba(0,0,0,0.5)"}));
+  parent.appendChild(svgEl("circle",{cx,cy,r:PLAYER_R,fill:color}));
+  parent.appendChild(svgEl("circle",{cx,cy,r:PLAYER_R,fill:"none",stroke:"rgba(255,255,255,0.25)","stroke-width":"1.5"}));
+  const t=svgEl("text",{x:cx,y:cy+5,"text-anchor":"middle",fill:"#000","font-size":"12","font-weight":"900","font-family":"'Barlow Condensed',sans-serif"},label);
+  parent.appendChild(t);
+}
+
+// ─── Build the static (non-animating) parts of the SVG frame ────────────────
+function buildStaticSVG(svg, config){
+  const{drillNum,drillCat,title1,title2,meta,seriesLabel,players,phaseDots,startPositions,coneGate}=config;
+  const ns="http://www.w3.org/2000/svg";
+
+  // defs
+  const defs=document.createElementNS(ns,"defs");
+  defs.innerHTML=`
+    <radialGradient id="bgGrad" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#0d1530"/>
+      <stop offset="100%" stop-color="#080c18"/>
+    </radialGradient>
+    <filter id="playerGlow">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="pitchClip">
+      <rect x="${PITCH_X}" y="${PITCH_Y}" width="${PITCH_W}" height="${PITCH_H}"/>
+    </clipPath>`;
+  svg.appendChild(defs);
+
+  // background
+  svg.appendChild(svgEl("rect",{width:W,height:H,fill:"url(#bgGrad)"}));
+  for(let i=0;i<8;i++) svg.appendChild(svgEl("line",{x1:0,y1:i*90,x2:W,y2:i*90,stroke:"rgba(180,255,80,0.03)","stroke-width":1}));
+
+  // series badge
+  svg.appendChild(svgEl("rect",{x:22,y:8,width:62,height:16,rx:3,fill:"rgba(180,255,80,0.08)",stroke:"rgba(180,255,80,0.2)","stroke-width":1}));
+  svg.appendChild(svgEl("text",{x:53,y:20,"text-anchor":"middle",fill:"rgba(180,255,80,0.6)","font-size":9,"font-weight":700,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":2},seriesLabel));
+  svg.appendChild(svgEl("line",{x1:0,y1:62,x2:W,y2:62,stroke:"rgba(180,255,80,0.15)","stroke-width":1}));
+
+  // logo — tspans so DRILL and IQ sit flush as one word
+  const logoEl=document.createElementNS(ns,"text");
+  logoEl.setAttribute("x",22);logoEl.setAttribute("y",46);
+  logoEl.setAttribute("font-size",28);logoEl.setAttribute("font-weight",900);
+  logoEl.setAttribute("font-family","'Barlow Condensed',sans-serif");
+  const ts1=document.createElementNS(ns,"tspan");ts1.setAttribute("fill","#B4FF50");ts1.setAttribute("letter-spacing",1);ts1.textContent="DRILL";
+  const ts2=document.createElementNS(ns,"tspan");ts2.setAttribute("fill","#ffffff");ts2.setAttribute("letter-spacing",2);ts2.textContent="IQ";
+  logoEl.appendChild(ts1);logoEl.appendChild(ts2);svg.appendChild(logoEl);
+
+  // age badge
+  svg.appendChild(svgEl("rect",{x:W-80,y:22,width:58,height:24,rx:12,fill:"rgba(180,255,80,0.12)",stroke:"rgba(180,255,80,0.3)","stroke-width":1}));
+  svg.appendChild(svgEl("text",{x:W-51,y:38,"text-anchor":"middle",fill:"#B4FF50","font-size":10,"font-weight":700,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":2},"U8 · U10"));
+
+  // drill label + title
+  svg.appendChild(svgEl("text",{x:22,y:86,fill:"rgba(180,255,80,0.55)","font-size":10,"font-weight":700,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":4},`DRILL ${drillNum} · ${drillCat}`));
+  svg.appendChild(svgEl("text",{x:22,y:120,fill:"#ffffff","font-size":38,"font-weight":900,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":1},title1));
+  svg.appendChild(svgEl("text",{x:22,y:155,fill:"#ffffff","font-size":38,"font-weight":900,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":1},title2));
+
+  // meta pills
+  meta.forEach((tag,i)=>{
+    svg.appendChild(svgEl("rect",{x:22+i*88,y:163,width:80,height:20,rx:4,fill:"rgba(255,255,255,0.04)",stroke:"rgba(255,255,255,0.08)","stroke-width":1}));
+    svg.appendChild(svgEl("text",{x:22+i*88+40,y:177,"text-anchor":"middle",fill:"rgba(255,255,255,0.4)","font-size":9,"font-weight":600,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":2},tag));
+  });
+
+  // pitch stripes + markings
+  const pw=PITCH_W,ph=PITCH_H,ox=PITCH_X,oy=PITCH_Y;
+  for(let i=0;i<Math.ceil(pw/28);i++) svg.appendChild(svgEl("rect",{x:ox+i*28,y:oy,width:14,height:ph,fill:i%2===0?"#0d1f0d":"#0b1a0b"}));
+  svg.appendChild(svgEl("rect",{x:ox,y:oy,width:pw,height:ph,fill:"none",stroke:"#1a5c2a","stroke-width":1.2}));
+  svg.appendChild(svgEl("line",{x1:ox+pw/2,y1:oy,x2:ox+pw/2,y2:oy+ph,stroke:"#1a5c2a","stroke-width":1}));
+  svg.appendChild(svgEl("circle",{cx:ox+pw/2,cy:oy+ph/2,r:36,fill:"none",stroke:"#1a5c2a","stroke-width":1}));
+  svg.appendChild(svgEl("circle",{cx:ox+pw/2,cy:oy+ph/2,r:2,fill:"#1a5c2a"}));
+  svg.appendChild(svgEl("rect",{x:ox,y:oy+ph*0.25,width:pw*0.18,height:ph*0.5,fill:"none",stroke:"#1a5c2a","stroke-width":1}));
+  svg.appendChild(svgEl("rect",{x:ox+pw*0.82,y:oy+ph*0.25,width:pw*0.18,height:ph*0.5,fill:"none",stroke:"#1a5c2a","stroke-width":1}));
+  svg.appendChild(svgEl("rect",{x:ox,y:oy+ph*0.37,width:pw*0.08,height:ph*0.26,fill:"none",stroke:"#1a5c2a","stroke-width":0.8}));
+  svg.appendChild(svgEl("rect",{x:ox+pw*0.92,y:oy+ph*0.37,width:pw*0.08,height:ph*0.26,fill:"none",stroke:"#1a5c2a","stroke-width":0.8}));
+  svg.appendChild(svgEl("rect",{x:ox-12,y:oy+ph*0.37,width:12,height:ph*0.26,fill:"none",stroke:"rgba(255,255,255,0.4)","stroke-width":1.2}));
+  svg.appendChild(svgEl("rect",{x:ox+pw,y:oy+ph*0.37,width:12,height:ph*0.26,fill:"none",stroke:"rgba(255,255,255,0.4)","stroke-width":1.2}));
+  svg.appendChild(svgEl("circle",{cx:ox+pw*0.14,cy:oy+ph*0.5,r:2.2,fill:"#1a5c2a"}));
+  svg.appendChild(svgEl("circle",{cx:ox+pw*0.86,cy:oy+ph*0.5,r:2.2,fill:"#1a5c2a"}));
+
+  // start position rings — dashed circle in player colour at initial position
+  if(startPositions){
+    startPositions.forEach((p,i)=>{
+      const col=players[i]?players[i].color:"#ffffff";
+      svg.appendChild(svgEl("circle",{cx:PITCH_X+p.x,cy:PITCH_Y+p.y,r:PLAYER_R+5,fill:"none",stroke:col,"stroke-width":1.2,"stroke-dasharray":"4 3",opacity:0.35}));
+    });
+  }
+
+  // cone gate — two orange triangles marking the finishing zone near goal mouth
+  if(coneGate){
+    coneGate.forEach(c=>{
+      const cx3=PITCH_X+c.x,cy3=PITCH_Y+c.y,cs=7;
+      svg.appendChild(svgEl("polygon",{points:`${cx3},${cy3-cs} ${cx3-cs*0.6},${cy3+cs*0.5} ${cx3+cs*0.6},${cy3+cs*0.5}`,fill:"#FF8C00",opacity:0.85}));
+      svg.appendChild(svgEl("polygon",{points:`${cx3},${cy3-cs} ${cx3-cs*0.6},${cy3+cs*0.5} ${cx3+cs*0.6},${cy3+cs*0.5}`,fill:"none",stroke:"rgba(255,255,255,0.35)","stroke-width":0.8}));
+    });
+  }
+
+  // dynamic layer — cleared and redrawn every frame
+  const dl=document.createElementNS(ns,"g");dl.id="dynamicLayer";svg.appendChild(dl);
+
+  // goal flash overlay
+  const go=document.createElementNS(ns,"rect");
+  go.id="goalOverlay";go.setAttribute("width",W);go.setAttribute("height",H);
+  go.setAttribute("fill","rgba(180,255,80,0.05)");go.setAttribute("opacity",0);
+  svg.appendChild(go);
+
+  // phase bar background
+  svg.appendChild(svgEl("rect",{x:0,y:PITCH_Y+PITCH_H,width:W,height:1,fill:"rgba(180,255,80,0.12)"}));
+  svg.appendChild(svgEl("rect",{x:0,y:PITCH_Y+PITCH_H+1,width:W,height:72,fill:"rgba(10,15,30,0.95)"}));
+
+  // phase step dots
+  const dotsGroup=document.createElementNS(ns,"g");dotsGroup.id="dotsGroup";svg.appendChild(dotsGroup);
+  const spacing=phaseDots<=4?32:28,wA=phaseDots<=4?28:24,wI=phaseDots<=4?20:16;
+  for(let i=0;i<phaseDots;i++){
+    const dot=document.createElementNS(ns,"rect");
+    dot.setAttribute("x",22+i*spacing);dot.setAttribute("y",PITCH_Y+PITCH_H+14);
+    dot.setAttribute("width",wI);dot.setAttribute("height",3);dot.setAttribute("rx",1.5);
+    dot.setAttribute("fill","rgba(180,255,80,0.18)");dot.id=`dot_${i}`;dotsGroup.appendChild(dot);
+  }
+
+  // hold badge
+  const hg=document.createElementNS(ns,"g");hg.id="holdGroup";hg.setAttribute("opacity",0);svg.appendChild(hg);
+  hg.appendChild(svgEl("rect",{x:W-78,y:PITCH_Y+PITCH_H+8,width:56,height:18,rx:9,fill:"rgba(180,255,80,0.1)",stroke:"rgba(180,255,80,0.25)","stroke-width":1}));
+  hg.appendChild(svgEl("text",{x:W-50,y:PITCH_Y+PITCH_H+20,"text-anchor":"middle",fill:"#B4FF50","font-size":9,"font-weight":700,"letter-spacing":1.5,"font-family":"'Barlow Condensed',sans-serif"},"● HOLD"));
+
+  // phase label text
+  const pl=document.createElementNS(ns,"text");
+  pl.id="phaseLabel";pl.setAttribute("x",22);pl.setAttribute("y",PITCH_Y+PITCH_H+36);
+  pl.setAttribute("fill","#ffffff");pl.setAttribute("font-size",18);pl.setAttribute("font-weight",900);
+  pl.setAttribute("font-family","'Barlow Condensed',sans-serif");pl.setAttribute("letter-spacing",1);
+  svg.appendChild(pl);
+
+  // footer
+  svg.appendChild(svgEl("rect",{x:0,y:PITCH_Y+PITCH_H+73,width:W,height:1,fill:"rgba(180,255,80,0.08)"}));
+  svg.appendChild(svgEl("rect",{x:0,y:PITCH_Y+PITCH_H+74,width:W,height:56,fill:"rgba(8,12,24,0.98)"}));
+
+  // legend — pass
+  svg.appendChild(svgEl("line",{x1:22,y1:PITCH_Y+PITCH_H+95,x2:50,y2:PITCH_Y+PITCH_H+95,stroke:"#B4FF50","stroke-width":2}));
+  svg.appendChild(svgEl("polygon",{points:`50,${PITCH_Y+PITCH_H+92} 58,${PITCH_Y+PITCH_H+95} 50,${PITCH_Y+PITCH_H+98}`,fill:"#B4FF50"}));
+  svg.appendChild(svgEl("text",{x:64,y:PITCH_Y+PITCH_H+99,fill:"rgba(255,255,255,0.5)","font-size":10,"font-weight":600,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":1.5},"PASS"));
+  // legend — run
+  svg.appendChild(svgEl("line",{x1:114,y1:PITCH_Y+PITCH_H+95,x2:142,y2:PITCH_Y+PITCH_H+95,stroke:"#7aaff0","stroke-width":1.5,"stroke-dasharray":"5 3"}));
+  svg.appendChild(svgEl("circle",{cx:146,cy:PITCH_Y+PITCH_H+95,r:2.5,fill:"#7aaff0"}));
+  svg.appendChild(svgEl("text",{x:154,y:PITCH_Y+PITCH_H+99,fill:"rgba(255,255,255,0.5)","font-size":10,"font-weight":600,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":1.5},"RUN"));
+
+  // player colour keys
+  const keyX=players.length<=2?220:players.length===3?220:205;
+  const keySpacing=players.length<=3?58:48;
+  players.forEach((p,i)=>{
+    svg.appendChild(svgEl("circle",{cx:keyX+i*keySpacing,cy:PITCH_Y+PITCH_H+95,r:7,fill:p.color}));
+    svg.appendChild(svgEl("text",{x:keyX+i*keySpacing,y:PITCH_Y+PITCH_H+99,"text-anchor":"middle",fill:"#000","font-size":8,"font-weight":900,"font-family":"'Barlow Condensed',sans-serif"},p.label));
+  });
+
+  // handle
+  svg.appendChild(svgEl("text",{x:W/2,y:PITCH_Y+PITCH_H+122,"text-anchor":"middle",fill:"rgba(180,255,80,0.25)","font-size":10,"font-weight":700,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":3},"@DRILLIQ · #FOOTBALLCOACHING"));
+
+  // progress bar track + fill
+  svg.appendChild(svgEl("rect",{x:0,y:H-4,width:W,height:4,fill:"rgba(180,255,80,0.08)"}));
+  const pb=document.createElementNS(ns,"rect");
+  pb.id="progressBar";pb.setAttribute("x",0);pb.setAttribute("y",H-4);pb.setAttribute("width",0);pb.setAttribute("height",4);pb.setAttribute("fill","#B4FF50");pb.setAttribute("opacity",0.7);
+  svg.appendChild(pb);
+}
+
+// ─── Mount and run the animation loop for a drill ───────────────────────────
+function runDrill(config){
+  const{states,segments,players,goalThreshold,phaseDots,startBall}=config;
+  const segMeta=buildSegMeta(segments);
+  const totalDuration=segMeta[segMeta.length-1].end;
+
+  const svg=document.getElementById("mainSVG");
+  buildStaticSVG(svg,config);
+
+  let playing=false,elapsed=0,speed=1,lastTs=null,spinAngle=0;
+  let prevBall=toCanvas(startBall||{x:0,y:0});
+
+  function render(state,progress){
+    const isGoal=progress>goalThreshold;
+    const ns="http://www.w3.org/2000/svg";
+    const dl=document.getElementById("dynamicLayer");
+    while(dl.firstChild)dl.removeChild(dl.firstChild);
+
+    const clip=document.createElementNS(ns,"g");
+    clip.setAttribute("clip-path","url(#pitchClip)");
+
+    if(state.arrows)state.arrows.forEach(a=>drawArrow(clip,a,state.players,state.arrowOpacity??1));
+    if(state.players)state.players.forEach((p,i)=>{
+      const cp=toCanvas(p),g=document.createElementNS(ns,"g");
+      g.setAttribute("filter","url(#playerGlow)");
+      drawPlayer(g,cp.x,cp.y,players[i].color,players[i].label);
+      clip.appendChild(g);
+    });
+    if(state.ball){
+      const bc=toCanvas(state.ball);
+      spinAngle+=Math.sqrt((bc.x-prevBall.x)**2+(bc.y-prevBall.y)**2)*4;
+      prevBall={x:bc.x,y:bc.y};
+      drawBall(clip,bc.x,bc.y,spinAngle);
+    }
+    dl.appendChild(clip);
+
+    document.getElementById("goalOverlay").setAttribute("opacity",0);
+
+    // step dots
+    const t=elapsed%totalDuration;
+    let phaseIdx=0;
+    for(let i=0;i<segMeta.length;i++){if(t<segMeta[i].end){phaseIdx=i;break;}}
+    const sp=phaseDots<=4?32:28,wA2=phaseDots<=4?28:24,wI2=phaseDots<=4?20:16;
+    for(let i=0;i<phaseDots;i++){
+      const d=document.getElementById(`dot_${i}`);
+      if(d){d.setAttribute("width",i===phaseIdx?wA2:wI2);d.setAttribute("fill",i===phaseIdx?"#B4FF50":"rgba(180,255,80,0.18)");}
+    }
+
+    document.getElementById("holdGroup").setAttribute("opacity",(state.isPause&&!isGoal)?1:0);
+    document.getElementById("phaseLabel").textContent=isGoal?"⚽ GOAL! RESET & REPEAT":(state.label||"").toUpperCase();
+    document.getElementById("progressBar").setAttribute("width",W*progress);
+  }
+
+  function tick(ts){
+    if(lastTs!==null)elapsed+=(ts-lastTs)*speed;
+    lastTs=ts;
+    render(getAnimState(elapsed,states,segMeta,totalDuration),(elapsed%totalDuration)/totalDuration);
+    if(playing)requestAnimationFrame(tick);
+  }
+
+  // controls
+  const btnPlay=document.getElementById("btnPlay");
+  btnPlay.addEventListener("click",()=>{
+    playing=!playing;
+    btnPlay.textContent=playing?"⏸ PAUSE":"▶ PLAY";
+    btnPlay.classList.toggle("paused",playing);
+    if(playing){lastTs=null;requestAnimationFrame(tick);}
+  });
+  document.getElementById("btnReset").addEventListener("click",()=>{
+    playing=false;elapsed=0;lastTs=null;spinAngle=0;
+    prevBall=toCanvas(startBall||{x:0,y:0});
+    btnPlay.textContent="▶ PLAY";btnPlay.classList.remove("paused");
+    render(getAnimState(0,states,segMeta,totalDuration),0);
+  });
+  document.querySelectorAll(".btn-speed").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      speed=parseFloat(btn.dataset.speed);
+      document.querySelectorAll(".btn-speed").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
+
+  // initial render
+  render(getAnimState(0,states,segMeta,totalDuration),0);
+}
+
+const drills = [
+  {
+    "num": "01",
+    "cat": "PASSING",
+    "title": "THE BASIC<br>WALL PASS",
+    "players": 2,
+    "time": 10,
+    "type": "PASSING",
+    "setup": {
+      "players": "2",
+      "area": "20 \u00d7 15m",
+      "duration": "10 min",
+      "equipment": "4 cones, 1 ball",
+      "overview": "This is one of the simplest combinations in football \u2014 and one of the most useful. Player 1 passes to Player 2, runs forward, and gets the ball back. Two players, one touch, and suddenly you've beaten an imaginary defender. It sounds easy, but getting the timing right takes practice. This is a great drill to start every session with.",
+      "arrangement": [
+        "Set out 4 cones to mark a channel roughly 20m long and 15m wide.",
+        "Place 2 cones at the far end about 1 metre apart \u2014 this is the goal the players are shooting through.",
+        "Player 1 starts at one end with the ball. Player 2 stands slightly ahead and to one side, in the middle of the channel.",
+        "After each go, players swap roles so everyone gets a turn at both jobs.",
+        "You can run two pairs at once if you have enough players \u2014 just make sure they're going in the same direction."
+      ]
+    },
+    "cues": [
+      {
+        "phase": "BEFORE THE PASS",
+        "text": "Ask Player 1 to look up before they pass. It sounds obvious but young players almost always stare at the ball instead. Knowing where Player 2 is before passing makes everything quicker.",
+        "quote": "Look up first, then pass.",
+        "note": "If a player keeps looking down, try asking them to call Player 2's name before passing. It forces them to find them first."
+      },
+      {
+        "phase": "THE PASS",
+        "text": "The pass should be firm and go to Player 2's feet \u2014 not too soft, not so hard it bounces off. Side of the foot is best for accuracy. Encourage players to aim rather than just boot it.",
+        "quote": "Firm pass to the feet \u2014 give them something to work with.",
+        "note": "A soft pass forces Player 2 to take an extra touch, which slows everything down and defeats the whole drill."
+      },
+      {
+        "phase": "THE RUN",
+        "text": "This is the key bit \u2014 Player 1 must start running forward the moment they pass. Not after. Not when they see the return coming. At the same time as the pass. This takes practice and it will feel wrong at first, but it's what makes the combination work.",
+        "quote": "Pass and run at the same time \u2014 not pass, then run.",
+        "note": "Most players will pass and then pause to watch what happens. If you see this, stop the drill and show them the timing yourself. Walk through it slowly \u2014 pass with one hand, walk forward \u2014 so they see it clearly."
+      },
+      {
+        "phase": "THE RETURN",
+        "text": "Player 2's job is to send the ball back first time into the space Player 1 is running into \u2014 not back to where Player 1 started. They need to open their body slightly before the ball arrives so the return goes forward, not sideways.",
+        "quote": "Return it into the space \u2014 not back where they came from.",
+        "note": ""
+      },
+      {
+        "phase": "THE FINISH",
+        "text": "Player 1 runs onto the return and shoots through the cones. At this age, accuracy matters more than power. Ask players to pick a side of the gate and aim for it.",
+        "quote": "Pick your spot \u2014 then shoot.",
+        "note": ""
+      }
+    ],
+    "progressions": [
+      {
+        "signal": "ready",
+        "label": "START HERE",
+        "title": "Walk it through first",
+        "desc": "Do the whole drill at walking pace before adding speed. Player 1 walks forward while passing, Player 2 returns it, Player 1 walks through and shoots. It looks slow but it helps players understand the shape of the movement.",
+        "why": "If you start at full speed, players just run around and nothing clicks. Walking pace reveals the timing problem immediately and players can feel it."
+      },
+      {
+        "signal": "ready",
+        "label": "WHEN READY",
+        "title": "Full pace",
+        "desc": "Once players have done it slowly a few times and the sequence makes sense, let them go at full speed. Some pairs will get the timing straight away. Others will need to go back to slow pace \u2014 that's fine.",
+        "why": "Speed is when the timing really gets tested. Don't rush to it, but don't stay at walking pace for too long either \u2014 it needs to feel like football."
+      },
+      {
+        "signal": "challenge",
+        "label": "ADD A CHALLENGE",
+        "title": "Put a passive defender in",
+        "desc": "Ask a third player to stand between Player 1 and Player 2 without moving or tackling. Player 1 must now pass around them. The defender just stands there \u2014 they're not trying to intercept, they just take up space.",
+        "why": "Now there's an actual reason to do the wall pass. Without something to play around, players can just dribble straight through. A static defender makes it feel real."
+      },
+      {
+        "signal": "challenge",
+        "label": "PROGRESS",
+        "title": "The defender can move",
+        "desc": "The defender can now step toward Player 2 after Player 1's pass. Player 2 must return the ball quickly before the defender arrives. The defender still can't tackle Player 1 at the start.",
+        "why": "This is close to match conditions. If Player 2 is slow with the return, the drill breaks down \u2014 which shows players exactly why the one-touch return matters."
+      }
+    ],
+    "mistakes": [
+      {
+        "problem": "Player 1 passes and then stops",
+        "cause": "They want to see what happens \u2014 it's natural curiosity.",
+        "fix": "Try getting Player 1 to say 'pass and go' out loud as they do it. Making it verbal helps the run happen automatically. You can also ask them to point forward with their hand as they pass \u2014 the gesture triggers the movement."
+      },
+      {
+        "problem": "Player 2 takes two touches before returning",
+        "cause": "Their body isn't ready when the ball arrives \u2014 they're facing the wrong way or not expecting it.",
+        "fix": "Ask Player 2 to get their foot ready to return the ball before it arrives \u2014 facing the direction Player 1 is running. If they have to adjust after receiving, they will always take an extra touch."
+      },
+      {
+        "problem": "The return goes behind Player 1",
+        "cause": "Player 2 is playing the ball back to where Player 1 was standing, not into the space they're running into.",
+        "fix": "Ask Player 2 to watch Player 1's run while they wait for the ball \u2014 not just stare at the ball coming toward them. A simple cue: 'pass it to where they're going, not where they were.'"
+      },
+      {
+        "problem": "Player 1 arrives before the return and has to wait",
+        "cause": "Player 1 ran too early, or Player 2 was slow with the return.",
+        "fix": "Slow everything down. Go back to walking pace. The timing is off somewhere \u2014 slow pace shows you exactly where."
+      },
+      {
+        "problem": "The shot misses the goal consistently",
+        "cause": "Players are going for power and losing accuracy.",
+        "fix": "Ask players to slow down for the last two steps before shooting. A controlled, accurate shot from close range is much better than blasting wide from further out."
+      }
+    ],
+    "config": {
+      "drillNum": "01",
+      "drillCat": "PASSING",
+      "title1": "THE BASIC",
+      "title2": "WALL PASS",
+      "meta": [
+        "2 PLAYERS",
+        "10 MIN",
+        "PASSING"
+      ],
+      "seriesLabel": "SERIES 1 OF 3",
+      "phaseDots": 3,
+      "goalThreshold": 0.87,
+      "players": [
+        {
+          "label": "1",
+          "color": "#FF6B35"
+        },
+        {
+          "label": "2",
+          "color": "#B4FF50"
+        }
+      ],
+      "startPositions": [
+        {
+          "x": 80,
+          "y": 140
+        },
+        {
+          "x": 230,
+          "y": 80
+        }
+      ],
+      "coneGate": [
+        {
+          "x": 350,
+          "y": 112
+        },
+        {
+          "x": 350,
+          "y": 168
+        }
+      ],
+      "startBall": {
+        "x": 80,
+        "y": 140
+      },
+      "states": {
+        "phase0": {
+          "label": "P1 passes to P2",
+          "players": [
+            {
+              "x": 80,
+              "y": 140
+            },
+            {
+              "x": 230,
+              "y": 80
+            }
+          ],
+          "ball": {
+            "x": 80,
+            "y": 140
+          },
+          "arrows": [
+            {
+              "from": 0,
+              "to": 1,
+              "dashed": false,
+              "color": "#B4FF50"
+            },
+            {
+              "from": 0,
+              "to": {
+                "x": 290,
+                "y": 140
+              },
+              "dashed": true,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase1": {
+          "label": "P2 returns first time",
+          "players": [
+            {
+              "x": 185,
+              "y": 140
+            },
+            {
+              "x": 230,
+              "y": 80
+            }
+          ],
+          "ball": {
+            "x": 230,
+            "y": 80
+          },
+          "arrows": [
+            {
+              "from": 1,
+              "to": {
+                "x": 295,
+                "y": 138
+              },
+              "dashed": false,
+              "color": "#FF6B35"
+            },
+            {
+              "from": 0,
+              "to": {
+                "x": 310,
+                "y": 138
+              },
+              "dashed": true,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase2": {
+          "label": "P1 runs onto it & shoots!",
+          "players": [
+            {
+              "x": 310,
+              "y": 138
+            },
+            {
+              "x": 255,
+              "y": 90
+            }
+          ],
+          "ball": {
+            "x": 310,
+            "y": 138
+          },
+          "arrows": [
+            {
+              "from": 0,
+              "to": {
+                "x": 375,
+                "y": 140
+              },
+              "dashed": false,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase3": {
+          "label": "GOAL!",
+          "players": [
+            {
+              "x": 310,
+              "y": 138
+            },
+            {
+              "x": 255,
+              "y": 90
+            }
+          ],
+          "ball": {
+            "x": 378,
+            "y": 140
+          },
+          "arrows": []
+        }
+      },
+      "segments": [
+        {
+          "from": "phase0",
+          "to": "phase1",
+          "moveDuration": 1600,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase1",
+          "to": "phase2",
+          "moveDuration": 1600,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase2",
+          "to": "phase3",
+          "moveDuration": 1100,
+          "pauseDuration": 900
+        }
+      ]
+    }
+  },
+  {
+    "num": "02",
+    "cat": "PASSING",
+    "title": "WALL PASS &<br>THIRD MAN RUN",
+    "players": 3,
+    "time": 15,
+    "type": "PASSING",
+    "setup": {
+      "players": "3",
+      "area": "25 \u00d7 20m",
+      "duration": "15 min",
+      "equipment": "4 cones, 1 ball",
+      "overview": "This builds on the wall pass by adding a third player. Player 1 and Player 2 do the wall pass combination, but now Player 3 is already making a run and gets the final pass. The idea is that while two players are combining, a third player sneaks in unnoticed \u2014 which is how a lot of real goals are scored.",
+      "arrangement": [
+        "Set out a channel about 25m long and 20m wide with cones at each corner.",
+        "Place 2 cones at the far end, about 1 metre apart, as the goal.",
+        "Player 1 starts at one end with the ball. Player 2 stands slightly ahead and to one side. Player 3 starts on the opposite side, level with Player 2.",
+        "Player 3's job is to start moving early and be ready to receive the final pass.",
+        "Rotate all three roles regularly so everyone has a go at each job."
+      ]
+    },
+    "cues": [
+      {
+        "phase": "PLAYER 1 \u2014 PASS & RUN",
+        "text": "Player 1 passes to Player 2 and runs forward \u2014 same as the basic wall pass. They're not doing anything new, just the same combination they practised before.",
+        "quote": "Pass and go \u2014 just like before.",
+        "note": ""
+      },
+      {
+        "phase": "PLAYER 2 \u2014 THE LAYOFF",
+        "text": "Player 2 receives Player 1's pass and lays it off \u2014 but this time, instead of returning it back to Player 1, they can look to play it to Player 3 who is making a run. Player 2 needs to be aware of where both Player 1 and Player 3 are before the ball arrives.",
+        "quote": "Look before the ball arrives \u2014 who's making a run?",
+        "note": "This is the hard part for Player 2. They need to read two options simultaneously. Start by telling them which option to use \u2014 'always play Player 3 today' \u2014 and only add the decision later."
+      },
+      {
+        "phase": "PLAYER 3 \u2014 THE RUN",
+        "text": "Player 3 should already be moving by the time Player 2 receives the ball. They don't wait to be called \u2014 they read the situation and go. The run should be toward goal and into space, not just in a straight line.",
+        "quote": "Start your run early \u2014 don't wait for the pass.",
+        "note": "If Player 3 is standing still waiting, the run won't work. Their movement is what creates the space. Remind them that making a good run without getting the ball is still good play."
+      },
+      {
+        "phase": "THE FINISH",
+        "text": "Player 3 receives the final pass and shoots. If they're in a good position, they should have a clear shot at goal. Encourage a composed finish rather than a wild hit.",
+        "quote": "Take a breath and pick your spot.",
+        "note": ""
+      }
+    ],
+    "progressions": [
+      {
+        "signal": "ready",
+        "label": "START HERE",
+        "title": "Pre-set the pass",
+        "desc": "Tell Player 2 that they must always play it to Player 3 \u2014 no decision needed. Player 1 and Player 2 do the wall pass, then Player 2 automatically passes to Player 3. This lets everyone learn their movement without the complexity of choosing.",
+        "why": "Decision-making is hard when you're also learning a new movement pattern. Remove the choice first, add it back once everyone knows their job."
+      },
+      {
+        "signal": "ready",
+        "label": "WHEN READY",
+        "title": "Player 2 chooses",
+        "desc": "Now Player 2 can pass to either Player 1 or Player 3, depending on who's in a better position. Player 1 should still run as if they expect to receive it \u2014 this keeps the defender guessing.",
+        "why": "This is when the drill starts to feel like real football. Player 2 must read the game and make a decision, not just follow a script."
+      },
+      {
+        "signal": "challenge",
+        "label": "ADD A CHALLENGE",
+        "title": "Add a passive defender",
+        "desc": "Place a defender on Player 3's side who walks slowly toward them after Player 2 receives the ball. Player 3 must make their run earlier and Player 2 must spot them before the defender closes down.",
+        "why": "A defender makes the timing of Player 3's run more important. If they leave it too late, the space is gone."
+      },
+      {
+        "signal": "challenge",
+        "label": "PROGRESS",
+        "title": "Two touches for Player 2",
+        "desc": "Player 2 is now allowed two touches \u2014 one to control, one to pass. This gives Player 3 a fraction more time to get into position, but also means there's more time for defenders to react.",
+        "why": "Limiting touches forces quicker thinking. This is a nice challenge once the basic pattern is working."
+      }
+    ],
+    "mistakes": [
+      {
+        "problem": "Player 3 starts their run too late",
+        "cause": "They're watching the wall pass rather than anticipating it.",
+        "fix": "Give Player 3 a trigger \u2014 start moving the moment Player 1 passes to Player 2. They don't need to wait and see what happens, they just go."
+      },
+      {
+        "problem": "Player 2 ignores Player 3 and always returns to Player 1",
+        "cause": "Player 2 is still in wall pass mode from the previous drill.",
+        "fix": "Before the drill starts, remind Player 2 explicitly: 'today your job is to look for Player 3'. Walk through it slowly so they understand the new option."
+      },
+      {
+        "problem": "Player 3 runs in a straight line and arrives flat-footed",
+        "cause": "They haven't thought about where they need to be to receive and shoot comfortably.",
+        "fix": "Ask Player 3 to think about the angle they want to receive at \u2014 slightly to the side, body open toward goal, ready to shoot first time."
+      },
+      {
+        "problem": "The whole thing breaks down and no one knows whose fault it is",
+        "cause": "Three players coordinating is genuinely more complicated than two. Timing errors compound.",
+        "fix": "Stop and walk through it. Ask each player to describe their job before trying again. Often a player is unsure of their role and guessing \u2014 which throws everyone else off."
+      }
+    ],
+    "config": {
+      "drillNum": "02",
+      "drillCat": "PASSING",
+      "title1": "WALL PASS &",
+      "title2": "THIRD MAN RUN",
+      "meta": [
+        "3 PLAYERS",
+        "15 MIN",
+        "PASSING"
+      ],
+      "seriesLabel": "SERIES 2 OF 3",
+      "phaseDots": 4,
+      "goalThreshold": 0.85,
+      "players": [
+        {
+          "label": "1",
+          "color": "#FF6B35"
+        },
+        {
+          "label": "2",
+          "color": "#B4FF50"
+        },
+        {
+          "label": "3",
+          "color": "#7aaff0"
+        }
+      ],
+      "startPositions": [
+        {
+          "x": 70,
+          "y": 140
+        },
+        {
+          "x": 220,
+          "y": 70
+        },
+        {
+          "x": 220,
+          "y": 210
+        }
+      ],
+      "coneGate": [
+        {
+          "x": 350,
+          "y": 112
+        },
+        {
+          "x": 350,
+          "y": 168
+        }
+      ],
+      "startBall": {
+        "x": 70,
+        "y": 140
+      },
+      "states": {
+        "phase0": {
+          "label": "P1 passes to P2",
+          "players": [
+            {
+              "x": 70,
+              "y": 140
+            },
+            {
+              "x": 220,
+              "y": 70
+            },
+            {
+              "x": 220,
+              "y": 210
+            }
+          ],
+          "ball": {
+            "x": 70,
+            "y": 140
+          },
+          "arrows": [
+            {
+              "from": 0,
+              "to": 1,
+              "dashed": false,
+              "color": "#B4FF50"
+            },
+            {
+              "from": 2,
+              "to": {
+                "x": 310,
+                "y": 140
+              },
+              "dashed": true,
+              "color": "#7aaff0"
+            }
+          ]
+        },
+        "phase1": {
+          "label": "P2 lays off to P3",
+          "players": [
+            {
+              "x": 130,
+              "y": 140
+            },
+            {
+              "x": 220,
+              "y": 70
+            },
+            {
+              "x": 270,
+              "y": 175
+            }
+          ],
+          "ball": {
+            "x": 220,
+            "y": 70
+          },
+          "arrows": [
+            {
+              "from": 1,
+              "to": 2,
+              "dashed": false,
+              "color": "#7aaff0"
+            },
+            {
+              "from": 0,
+              "to": {
+                "x": 300,
+                "y": 110
+              },
+              "dashed": true,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase2": {
+          "label": "P3 plays P1 through",
+          "players": [
+            {
+              "x": 220,
+              "y": 120
+            },
+            {
+              "x": 240,
+              "y": 75
+            },
+            {
+              "x": 280,
+              "y": 175
+            }
+          ],
+          "ball": {
+            "x": 280,
+            "y": 175
+          },
+          "arrows": [
+            {
+              "from": 2,
+              "to": {
+                "x": 330,
+                "y": 115
+              },
+              "dashed": false,
+              "color": "#B4FF50"
+            },
+            {
+              "from": 0,
+              "to": {
+                "x": 335,
+                "y": 108
+              },
+              "dashed": true,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase3": {
+          "label": "P1 receives & shoots!",
+          "players": [
+            {
+              "x": 330,
+              "y": 110
+            },
+            {
+              "x": 295,
+              "y": 85
+            },
+            {
+              "x": 305,
+              "y": 175
+            }
+          ],
+          "ball": {
+            "x": 330,
+            "y": 110
+          },
+          "arrows": [
+            {
+              "from": 0,
+              "to": {
+                "x": 375,
+                "y": 140
+              },
+              "dashed": false,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase4": {
+          "label": "GOAL!",
+          "players": [
+            {
+              "x": 330,
+              "y": 110
+            },
+            {
+              "x": 295,
+              "y": 85
+            },
+            {
+              "x": 305,
+              "y": 175
+            }
+          ],
+          "ball": {
+            "x": 378,
+            "y": 140
+          },
+          "arrows": []
+        }
+      },
+      "segments": [
+        {
+          "from": "phase0",
+          "to": "phase1",
+          "moveDuration": 1600,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase1",
+          "to": "phase2",
+          "moveDuration": 1600,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase2",
+          "to": "phase3",
+          "moveDuration": 1600,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase3",
+          "to": "phase4",
+          "moveDuration": 1100,
+          "pauseDuration": 900
+        }
+      ]
+    }
+  },
+  {
+    "num": "03",
+    "cat": "PASSING",
+    "title": "OVERLAP &<br>CUTBACK",
+    "players": 4,
+    "time": 20,
+    "type": "ADVANCED",
+    "setup": {
+      "players": "4",
+      "area": "30 \u00d7 25m",
+      "duration": "20 min",
+      "equipment": "6 cones, 1 ball",
+      "overview": "This is the most complex passing drill in the series. Four players combine to create a chance \u2014 wide play, a switch, a run down the flank, and a cutback for a tap-in. It looks complicated but each player only has a simple job. The magic comes from everyone doing their bit at the right time. This is a great drill to show players how teamwork creates goals.",
+      "arrangement": [
+        "Set out a 30m \u00d7 25m area with cones at each corner. Place 2 cones as the goal at the far end.",
+        "Player 1 starts centrally with the ball. Player 2 positions wide on one side. Player 3 positions wide on the other side. Player 4 starts wide and high, near the far corner on Player 2's side.",
+        "The sequence is: Player 1 to Player 2, Player 2 to Player 3, Player 3 to Player 4 wide, Player 4 drives to the byline and cuts back, Player 1 or Player 3 taps in.",
+        "Walk through the sequence slowly with no ball first \u2014 players just move to their positions. This is a complicated sequence and seeing it first helps.",
+        "Rotate roles after every 4-5 repetitions."
+      ]
+    },
+    "cues": [
+      {
+        "phase": "PLAYER 1 \u2014 START THE MOVE",
+        "text": "Player 1 begins by passing to Player 2 and then moving into a central position for the finish. They don't need to do anything complicated \u2014 pass accurately and get into the box for the end of the move.",
+        "quote": "Pass it wide, then get into the box.",
+        "note": ""
+      },
+      {
+        "phase": "PLAYER 2 \u2014 QUICK LAYOFF",
+        "text": "Player 2 receives from Player 1 and quickly switches the ball to Player 3 on the other side. One or two touches maximum. The whole point is to move the ball quickly from one side to the other before the defence can shift.",
+        "quote": "Quick switch \u2014 one or two touches, then play it wide.",
+        "note": "If Player 2 slows down here and takes too many touches, the whole move stalls. Emphasise speed of play."
+      },
+      {
+        "phase": "PLAYER 3 \u2014 FIND PLAYER 4",
+        "text": "Player 3 receives the switch and plays it out wide to Player 4 who is making a run down the flank. The pass should go ahead of Player 4's run \u2014 not to their feet.",
+        "quote": "Play it into the space ahead of their run.",
+        "note": ""
+      },
+      {
+        "phase": "PLAYER 4 \u2014 DRIVE AND CROSS",
+        "text": "Player 4 receives wide, drives forward to the byline, and cuts the ball back low across the face of the goal \u2014 not a high cross, a low pullback along the ground. Player 1 and Player 3 should be arriving to finish.",
+        "quote": "Get to the byline, then cut it back low.",
+        "note": "A low cutback is much easier to finish than a high cross. This is worth demonstrating. Player 4 should aim for the penalty spot area, not try to pick out a specific player."
+      },
+      {
+        "phase": "THE FINISH",
+        "text": "Whoever arrives at the far end first finishes. It doesn't have to be a specific player \u2014 whoever times their run best gets the ball. One touch if possible.",
+        "quote": "Whoever arrives first \u2014 just put it in.",
+        "note": ""
+      }
+    ],
+    "progressions": [
+      {
+        "signal": "ready",
+        "label": "START HERE",
+        "title": "Walk through with no ball",
+        "desc": "Get all four players to walk through their movements without the ball. Player 1 passes and walks central. Player 2 turns and walks to Player 3's position. And so on. Do this two or three times until everyone knows where to go.",
+        "why": "This drill has four moving parts. If even one player doesn't know their job, it falls apart. A no-ball walkthrough removes pressure and lets everyone learn the pattern."
+      },
+      {
+        "signal": "ready",
+        "label": "WHEN READY",
+        "title": "Slow with the ball",
+        "desc": "Run the full drill with the ball but at walking pace. Players pass short, move slowly, and everyone can see the shape of the move developing.",
+        "why": "Slow pace with the ball reveals timing issues that the walkthrough won't show. If Player 4 is in the wrong position when the ball arrives, you see it immediately at slow pace."
+      },
+      {
+        "signal": "challenge",
+        "label": "ADD A CHALLENGE",
+        "title": "Full pace",
+        "desc": "Once the shape is clear, let players go at match speed. The combination will feel rushed at first but will click with repetition.",
+        "why": "Speed introduces the timing pressure that makes the drill realistic. It's when players start to feel how quickly they need to think and move."
+      },
+      {
+        "signal": "challenge",
+        "label": "PROGRESS",
+        "title": "Add a passive defender",
+        "desc": "Place a defender between Player 2 and Player 3 who jogs across trying to intercept the switch pass. Player 2 must play the switch quickly before the defender gets there.",
+        "why": "A defender makes the switch pass feel urgent \u2014 which is exactly how it feels in a match. Player 2 will naturally speed up their decision-making."
+      }
+    ],
+    "mistakes": [
+      {
+        "problem": "The sequence breaks down and players lose track of who does what",
+        "cause": "Four players is a lot to coordinate, especially if this is new to them.",
+        "fix": "Stop the drill and ask each player to say their job out loud. 'Player 2, what do you do?' Often players know roughly what to do but not specifically enough. Clarity fixes this."
+      },
+      {
+        "problem": "Player 4's cutback is too high and goes over everyone",
+        "cause": "Player 4 is trying to cross rather than cut back. They're using their instep rather than the inside of their foot.",
+        "fix": "Show the difference between a cross (lofted, instep) and a cutback (low, inside of foot, along the ground). Practice the cutback technique separately if needed \u2014 Player 4 just rolls it back along the ground."
+      },
+      {
+        "problem": "Nobody arrives to finish",
+        "cause": "Players watch the ball rather than running toward goal during the build-up.",
+        "fix": "Tell Player 1 and Player 3 to start moving toward the far end the moment Player 3 plays the ball to Player 4. They should be arriving as the cutback comes \u2014 not waiting to see it first."
+      },
+      {
+        "problem": "The switch pass from Player 2 to Player 3 keeps getting intercepted",
+        "cause": "Player 2 is telegraphing the pass or taking too long.",
+        "fix": "Practice just the switch pass in isolation \u2014 Player 2 receives, turns, passes to Player 3. Get it sharp and clean before adding the rest of the sequence."
+      }
+    ],
+    "config": {
+      "drillNum": "03",
+      "drillCat": "PASSING",
+      "title1": "OVERLAP &",
+      "title2": "CUTBACK",
+      "meta": [
+        "4 PLAYERS",
+        "20 MIN",
+        "ADVANCED"
+      ],
+      "seriesLabel": "SERIES 3 OF 3",
+      "phaseDots": 5,
+      "goalThreshold": 0.9,
+      "players": [
+        {
+          "label": "1",
+          "color": "#FF6B35"
+        },
+        {
+          "label": "2",
+          "color": "#B4FF50"
+        },
+        {
+          "label": "3",
+          "color": "#7aaff0"
+        },
+        {
+          "label": "4",
+          "color": "#ff80c8"
+        }
+      ],
+      "startPositions": [
+        {
+          "x": 60,
+          "y": 140
+        },
+        {
+          "x": 185,
+          "y": 80
+        },
+        {
+          "x": 185,
+          "y": 200
+        },
+        {
+          "x": 320,
+          "y": 72
+        }
+      ],
+      "coneGate": [
+        {
+          "x": 350,
+          "y": 112
+        },
+        {
+          "x": 350,
+          "y": 168
+        }
+      ],
+      "startBall": {
+        "x": 60,
+        "y": 140
+      },
+      "states": {
+        "phase0": {
+          "label": "P1 passes to P2",
+          "players": [
+            {
+              "x": 60,
+              "y": 140
+            },
+            {
+              "x": 185,
+              "y": 80
+            },
+            {
+              "x": 185,
+              "y": 200
+            },
+            {
+              "x": 320,
+              "y": 72
+            }
+          ],
+          "ball": {
+            "x": 60,
+            "y": 140
+          },
+          "arrows": [
+            {
+              "from": 0,
+              "to": 1,
+              "dashed": false,
+              "color": "#B4FF50"
+            },
+            {
+              "from": 2,
+              "to": {
+                "x": 260,
+                "y": 160
+              },
+              "dashed": true,
+              "color": "#7aaff0"
+            }
+          ]
+        },
+        "phase1": {
+          "label": "P2 lays off to P3",
+          "players": [
+            {
+              "x": 110,
+              "y": 140
+            },
+            {
+              "x": 185,
+              "y": 80
+            },
+            {
+              "x": 235,
+              "y": 175
+            },
+            {
+              "x": 320,
+              "y": 72
+            }
+          ],
+          "ball": {
+            "x": 185,
+            "y": 80
+          },
+          "arrows": [
+            {
+              "from": 1,
+              "to": 2,
+              "dashed": false,
+              "color": "#7aaff0"
+            },
+            {
+              "from": 3,
+              "to": {
+                "x": 358,
+                "y": 52
+              },
+              "dashed": true,
+              "color": "#ff80c8"
+            },
+            {
+              "from": 0,
+              "to": {
+                "x": 275,
+                "y": 130
+              },
+              "dashed": true,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase2": {
+          "label": "P3 switches to P4 wide",
+          "players": [
+            {
+              "x": 185,
+              "y": 130
+            },
+            {
+              "x": 215,
+              "y": 88
+            },
+            {
+              "x": 245,
+              "y": 178
+            },
+            {
+              "x": 345,
+              "y": 72
+            }
+          ],
+          "ball": {
+            "x": 245,
+            "y": 178
+          },
+          "arrows": [
+            {
+              "from": 2,
+              "to": 3,
+              "dashed": false,
+              "color": "#ff80c8"
+            },
+            {
+              "from": 0,
+              "to": {
+                "x": 308,
+                "y": 140
+              },
+              "dashed": true,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase3": {
+          "label": "P4 drives to byline",
+          "players": [
+            {
+              "x": 290,
+              "y": 138
+            },
+            {
+              "x": 260,
+              "y": 95
+            },
+            {
+              "x": 268,
+              "y": 188
+            },
+            {
+              "x": 358,
+              "y": 52
+            }
+          ],
+          "ball": {
+            "x": 358,
+            "y": 52
+          },
+          "arrows": [
+            {
+              "from": 3,
+              "to": {
+                "x": 308,
+                "y": 145
+              },
+              "dashed": false,
+              "color": "#ff80c8"
+            },
+            {
+              "from": 0,
+              "to": {
+                "x": 308,
+                "y": 145
+              },
+              "dashed": true,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase4": {
+          "label": "P1 taps in!",
+          "players": [
+            {
+              "x": 308,
+              "y": 145
+            },
+            {
+              "x": 272,
+              "y": 98
+            },
+            {
+              "x": 275,
+              "y": 195
+            },
+            {
+              "x": 358,
+              "y": 52
+            }
+          ],
+          "ball": {
+            "x": 308,
+            "y": 145
+          },
+          "arrows": [
+            {
+              "from": 0,
+              "to": {
+                "x": 375,
+                "y": 140
+              },
+              "dashed": false,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase5": {
+          "label": "GOAL!",
+          "players": [
+            {
+              "x": 308,
+              "y": 145
+            },
+            {
+              "x": 272,
+              "y": 98
+            },
+            {
+              "x": 275,
+              "y": 195
+            },
+            {
+              "x": 358,
+              "y": 52
+            }
+          ],
+          "ball": {
+            "x": 378,
+            "y": 140
+          },
+          "arrows": []
+        }
+      },
+      "segments": [
+        {
+          "from": "phase0",
+          "to": "phase1",
+          "moveDuration": 1600,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase1",
+          "to": "phase2",
+          "moveDuration": 1600,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase2",
+          "to": "phase3",
+          "moveDuration": 1600,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase3",
+          "to": "phase4",
+          "moveDuration": 1600,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase4",
+          "to": "phase5",
+          "moveDuration": 1100,
+          "pauseDuration": 900
+        }
+      ]
+    }
+  },
+  {
+    "num": "04",
+    "cat": "DRIBBLING",
+    "title": "CARRY, DRAW<br>& RELEASE",
+    "players": 3,
+    "time": 15,
+    "type": "DRIBBLING",
+    "setup": {
+      "players": "3",
+      "area": "25 \u00d7 20m",
+      "duration": "15 min",
+      "equipment": "4 cones, 1 ball",
+      "overview": "This drill teaches one of the most useful things in football \u2014 running at a defender to drag them out of position, then passing to the teammate they've just left behind. When a defender has to choose between stopping the ball carrier and covering someone else, someone is always free. This drill shows players how to make that happen.",
+      "arrangement": [
+        "Set out a 25m \u00d7 20m area. Place 2 cones at the far end as the goal.",
+        "Player 1 starts at one end with the ball. The Defender (in red bibs) starts centrally, about 12 metres ahead \u2014 in the way.",
+        "Player 2 starts wide on one side, roughly level with the Defender but with space to receive.",
+        "Player 1 must run straight at the Defender \u2014 not around them. The Defender tries to stop Player 1 going forward.",
+        "Rotate all three roles every 4-5 goes. The person playing Defender should try hard \u2014 the more realistic the defending, the better the learning."
+      ]
+    },
+    "cues": [
+      {
+        "phase": "THE CARRY",
+        "text": "Player 1 needs to run straight at the Defender \u2014 directly at them, not at an angle. If they drift wide, the Defender can cover both Player 1 and Player 2 at the same time and the drill doesn't work. Straight run, head up, ball close to the feet.",
+        "quote": "Go straight at them \u2014 make them choose.",
+        "note": "Most players will naturally run around the defender rather than at them. Challenge this every time. The defender is the target, not an obstacle to avoid."
+      },
+      {
+        "phase": "READING THE DEFENDER",
+        "text": "Player 1 watches the Defender's feet and body. The moment the Defender steps forward toward Player 1, that's the signal to pass. The pass needs to come quickly \u2014 once the Defender has committed, the space beside them is open for a moment, then it closes.",
+        "quote": "The moment they step \u2014 release it.",
+        "note": "This is the hardest bit of the drill to learn. Don't expect it straight away. Narrate what you see in real time as coach \u2014 'Now! They stepped! That was your moment.' Players learn faster when they hear the right moment identified."
+      },
+      {
+        "phase": "THE PASS TO PLAYER 2",
+        "text": "The pass should go slightly ahead of Player 2, not to their feet. Player 2 is already moving, so the ball needs to lead them. A pass to the feet means Player 2 has to slow down or stop.",
+        "quote": "Pass to where they're going, not where they are.",
+        "note": ""
+      },
+      {
+        "phase": "PLAYER 2 \u2014 MOVE EARLY",
+        "text": "Player 2 should start moving toward goal the moment Player 1 begins their carry \u2014 not when they see the pass coming. If Player 2 is already moving when the pass arrives, they can receive at pace and be on their way to goal in one touch.",
+        "quote": "Move before the pass \u2014 be ready when it comes.",
+        "note": "If Player 2 waits and stands still, the Defender has time to recover before Player 2 gets going. The advantage Player 1 has created disappears."
+      }
+    ],
+    "progressions": [
+      {
+        "signal": "ready",
+        "label": "START HERE",
+        "title": "Defender walks",
+        "desc": "The Defender walks slowly toward Player 1 rather than pressing hard. This makes it very easy to see when the commitment has happened and gives Player 1 plenty of time to release the pass.",
+        "why": "An obvious, slow commitment makes the timing decision much clearer. Players can feel the right moment without the time pressure of a hard press."
+      },
+      {
+        "signal": "ready",
+        "label": "WHEN READY",
+        "title": "Defender at half pace",
+        "desc": "The Defender moves more quickly. Player 1 must read the commitment faster and release the ball sooner. The window for the pass is shorter.",
+        "why": "This is where the real learning happens. A faster defender means earlier passing. Players begin to develop a feel for when to release rather than waiting until it's too late."
+      },
+      {
+        "signal": "challenge",
+        "label": "ADD A CHALLENGE",
+        "title": "Defender at full pace",
+        "desc": "The Defender presses hard. Player 1 must drive forward quickly and release early \u2014 sometimes before it feels like the moment is right. A pass held too long will be cut out.",
+        "why": "Full-pace defending is match realistic. Some players will nail it, others will struggle. Return to half pace whenever it keeps breaking down."
+      },
+      {
+        "signal": "challenge",
+        "label": "PROGRESS",
+        "title": "Two wide options",
+        "desc": "Add a third outfield player (Player 3) on the opposite side to Player 2. Now the Defender must choose which side to step toward. Player 1 passes to whichever player the Defender has moved away from.",
+        "why": "This is the full decision-making version \u2014 just like it happens in a real match. Player 1 can't pre-decide where to pass. They must read the Defender's movement and react."
+      }
+    ],
+    "mistakes": [
+      {
+        "problem": "Player 1 passes without carrying first",
+        "cause": "Passing straight away feels safe. Carrying at a defender is uncomfortable.",
+        "fix": "Make a simple rule \u2014 Player 1 must take at least 3 touches forward before passing. Count out loud if needed. The carry is the whole point; without it, the Defender doesn't move."
+      },
+      {
+        "problem": "Player 1 runs at an angle rather than straight",
+        "cause": "Instinct to avoid contact or find a gap.",
+        "fix": "Place a cone between Player 1's start and the Defender. Player 1 must run past the cone on the way. This forces a straight line."
+      },
+      {
+        "problem": "Player 1 holds the ball too long and the Defender wins it",
+        "cause": "Player 1 is waiting for the perfect moment that never quite arrives.",
+        "fix": "Tell Player 1 to pass as soon as the Defender takes even one step forward. The early pass feels too soon but that is exactly the right time. Narrate it live: 'Now! They stepped!'"
+      },
+      {
+        "problem": "Player 2 is standing still when the pass arrives",
+        "cause": "Player 2 is watching the action rather than anticipating it.",
+        "fix": "Give Player 2 a specific trigger: start moving the moment Player 1's third touch goes forward. This gives them a clear cue rather than asking them to read a more complex situation."
+      },
+      {
+        "problem": "The Defender gives up and doesn't press realistically",
+        "cause": "They feel bad making things hard for Player 1, or they don't understand their role.",
+        "fix": "Tell the Defender clearly \u2014 their pressure is what makes this drill valuable. If they don't press, nobody learns anything. Give them credit when they make Player 1's decision difficult."
+      }
+    ],
+    "config": {
+      "drillNum": "04",
+      "drillCat": "DRIBBLING",
+      "title1": "CARRY, DRAW",
+      "title2": "& RELEASE",
+      "meta": [
+        "3 PLAYERS",
+        "15 MIN",
+        "DRIBBLING"
+      ],
+      "seriesLabel": "SERIES 1 OF 3",
+      "phaseDots": 3,
+      "goalThreshold": 0.87,
+      "players": [
+        {
+          "label": "1",
+          "color": "#FF6B35"
+        },
+        {
+          "label": "2",
+          "color": "#B4FF50"
+        },
+        {
+          "label": "D",
+          "color": "#FF3B5C"
+        }
+      ],
+      "startPositions": [
+        {
+          "x": 80,
+          "y": 155
+        },
+        {
+          "x": 200,
+          "y": 65
+        },
+        {
+          "x": 185,
+          "y": 148
+        }
+      ],
+      "coneGate": [
+        {
+          "x": 350,
+          "y": 112
+        },
+        {
+          "x": 350,
+          "y": 168
+        }
+      ],
+      "startBall": {
+        "x": 80,
+        "y": 155
+      },
+      "states": {
+        "phase0": {
+          "label": "P1 carries at defender",
+          "players": [
+            {
+              "x": 80,
+              "y": 155
+            },
+            {
+              "x": 200,
+              "y": 65
+            },
+            {
+              "x": 185,
+              "y": 148
+            }
+          ],
+          "ball": {
+            "x": 80,
+            "y": 155
+          },
+          "arrows": [
+            {
+              "from": 0,
+              "to": {
+                "x": 200,
+                "y": 152
+              },
+              "dashed": true,
+              "color": "#FF6B35"
+            },
+            {
+              "from": 1,
+              "to": {
+                "x": 310,
+                "y": 65
+              },
+              "dashed": true,
+              "color": "#B4FF50"
+            }
+          ]
+        },
+        "phase1": {
+          "label": "Defender commits \u2014 release!",
+          "players": [
+            {
+              "x": 195,
+              "y": 152
+            },
+            {
+              "x": 270,
+              "y": 65
+            },
+            {
+              "x": 218,
+              "y": 150
+            }
+          ],
+          "ball": {
+            "x": 195,
+            "y": 152
+          },
+          "arrows": [
+            {
+              "from": 0,
+              "to": 1,
+              "dashed": false,
+              "color": "#B4FF50"
+            },
+            {
+              "from": 1,
+              "to": {
+                "x": 320,
+                "y": 65
+              },
+              "dashed": true,
+              "color": "#B4FF50"
+            }
+          ]
+        },
+        "phase2": {
+          "label": "P2 in space \u2014 shoots!",
+          "players": [
+            {
+              "x": 225,
+              "y": 152
+            },
+            {
+              "x": 318,
+              "y": 67
+            },
+            {
+              "x": 245,
+              "y": 150
+            }
+          ],
+          "ball": {
+            "x": 318,
+            "y": 67
+          },
+          "arrows": [
+            {
+              "from": 1,
+              "to": {
+                "x": 375,
+                "y": 140
+              },
+              "dashed": false,
+              "color": "#B4FF50"
+            }
+          ]
+        },
+        "phase3": {
+          "label": "GOAL!",
+          "players": [
+            {
+              "x": 225,
+              "y": 152
+            },
+            {
+              "x": 318,
+              "y": 67
+            },
+            {
+              "x": 245,
+              "y": 150
+            }
+          ],
+          "ball": {
+            "x": 378,
+            "y": 140
+          },
+          "arrows": []
+        }
+      },
+      "segments": [
+        {
+          "from": "phase0",
+          "to": "phase1",
+          "moveDuration": 1800,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase1",
+          "to": "phase2",
+          "moveDuration": 1500,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase2",
+          "to": "phase3",
+          "moveDuration": 1000,
+          "pauseDuration": 900
+        }
+      ]
+    }
+  },
+  {
+    "num": "05",
+    "cat": "PASSING",
+    "title": "PASS UNDER<br>PRESSURE",
+    "players": 4,
+    "time": 15,
+    "type": "PASSING",
+    "setup": {
+      "players": "4",
+      "area": "25 \u00d7 20m",
+      "duration": "15 min",
+      "equipment": "4 cones, 1 ball",
+      "overview": "This drill teaches players to stay calm and pass quickly when a defender is closing in. A defender can only be in one place \u2014 if they press the player with the ball, someone else is free. The trick is for the player under pressure to spot that free player and get the ball to them before being closed down. This is a skill young players use in every single match.",
+      "arrangement": [
+        "Set out a 25m \u00d7 20m area. Place 2 cones as the goal at the far end.",
+        "Player 1 starts at one end with the ball. Player 2 is in the middle \u2014 this is the player who will be pressured. Player 3 starts wide at the bottom, away from the Defender.",
+        "The Defender starts near Player 2 and presses them as soon as Player 1's pass arrives.",
+        "Player 2 must return the ball quickly to either Player 1 (who has run forward) or play it wide to Player 3.",
+        "Rotate roles regularly. The Defender should press realistically but not sprint flat out from the start \u2014 give Player 2 a chance to make the decision."
+      ]
+    },
+    "cues": [
+      {
+        "phase": "PLAYER 1 \u2014 PASS & MOVE",
+        "text": "Player 1 passes to Player 2 and immediately runs forward to stay as an option. If the Defender crowds out Player 2's other option, Player 1 might be the best choice for the return pass.",
+        "quote": "Pass and move \u2014 stay in the game.",
+        "note": ""
+      },
+      {
+        "phase": "PLAYER 2 \u2014 QUICK DECISION",
+        "text": "Player 2 receives the ball with the Defender pressing. They need to make a quick decision \u2014 pass back to Player 1, or play it wide to Player 3 who has no defender near them. One touch if possible. The longer they hold it, the less time they have.",
+        "quote": "One touch \u2014 quick decision, don't hold it.",
+        "note": "Player 2 must look before the ball arrives, not after. If they're looking while the ball is at their feet, the Defender has already arrived."
+      },
+      {
+        "phase": "READING THE DEFENDER",
+        "text": "Help Player 2 understand: the Defender can only go to one place. If the Defender presses Player 2, then Player 3 is free. Player 2 just needs to recognise this and play the ball to the free player.",
+        "quote": "Where is the Defender? Wherever they're not \u2014 that's where to pass.",
+        "note": "This is a key concept for young players and worth spending time on. Use the phrase 'the free player' regularly. Players start to look for it automatically."
+      },
+      {
+        "phase": "PLAYER 3 \u2014 MOVE TO GET FREE",
+        "text": "Player 3 shouldn't just stand still and wait. They should move into a position where they're easy to pass to \u2014 showing for the ball, making themselves available. Even a small movement helps Player 2 see them clearly.",
+        "quote": "Show for the ball \u2014 make yourself easy to find.",
+        "note": ""
+      }
+    ],
+    "progressions": [
+      {
+        "signal": "ready",
+        "label": "START HERE",
+        "title": "Defender presses slowly",
+        "desc": "The Defender jogs toward Player 2 rather than sprinting. Player 2 has more time to make the decision. Focus is on making the right choice, not making it under extreme pressure.",
+        "why": "Speed of the Defender is the main variable in this drill. Start slow so Player 2 can feel what the right decision looks like before the pressure ramps up."
+      },
+      {
+        "signal": "ready",
+        "label": "WHEN READY",
+        "title": "Defender presses hard",
+        "desc": "The Defender now sprints to press Player 2 as soon as the ball is played. Player 2 must make the decision before the ball even arrives \u2014 looking up during Player 1's pass to see where the Defender is going.",
+        "why": "Hard pressing is match-realistic. This is when one-touch play becomes not just useful but necessary. Players feel why it matters."
+      },
+      {
+        "signal": "challenge",
+        "label": "ADD A CHALLENGE",
+        "title": "Player 2 can turn",
+        "desc": "If the Defender doesn't press quickly enough, Player 2 is allowed to turn and drive forward with the ball. Now the Defender must choose between pressing tightly or staying and allowing the turn. Player 2 must read which option is available.",
+        "why": "This adds a third option \u2014 turn and go. Real football is full of these moments. If the Defender presses too high, space opens up behind them."
+      },
+      {
+        "signal": "challenge",
+        "label": "PROGRESS",
+        "title": "Two defenders",
+        "desc": "Add a second Defender who marks Player 3 loosely. Now Player 2 must check \u2014 is Player 3 free? Is Player 1 free? Whoever the Defenders are not pressing is the right pass.",
+        "why": "Two defenders make the decision harder but also more game-like. Both attacking options are now marked to some degree, so Player 2 must read who is more free."
+      }
+    ],
+    "mistakes": [
+      {
+        "problem": "Player 2 controls the ball and then looks up",
+        "cause": "They're looking after they receive rather than before. By then it's too late.",
+        "fix": "Ask Player 2 to glance to each side while Player 1 is passing the ball \u2014 before it arrives. Ask them to call out 'Player 3 is free' or 'Player 1 is free' before touching the ball. This habit of early awareness is the whole point of the drill."
+      },
+      {
+        "problem": "Player 2 always passes to the same player regardless of where the Defender is",
+        "cause": "They've pre-decided and aren't reading the Defender at all.",
+        "fix": "After each go, ask Player 2 where the Defender went. If they can't answer, they weren't watching. Make it a habit to ask \u2014 it makes the reading feel important."
+      },
+      {
+        "problem": "Player 3 stands too far away and Player 2 can't reach them",
+        "cause": "Player 3 is trying to stay out of the way, not showing for the ball.",
+        "fix": "Tell Player 3 their job is to get open and make themselves easy to pass to. Being too wide is as unhelpful as being too close. Ask them to find a spot where they can receive comfortably."
+      },
+      {
+        "problem": "The Defender closes down so fast that Player 2 never has time",
+        "cause": "The Defender is starting too close or pressing before the ball is played.",
+        "fix": "Set a rule \u2014 the Defender must wait until the ball leaves Player 1's foot before moving. They should start from a realistic defensive position, not right next to Player 2."
+      }
+    ],
+    "config": {
+      "drillNum": "05",
+      "drillCat": "PASSING",
+      "title1": "PASS UNDER",
+      "title2": "PRESSURE",
+      "meta": [
+        "4 PLAYERS",
+        "15 MIN",
+        "PASSING"
+      ],
+      "seriesLabel": "SERIES 2 OF 3",
+      "phaseDots": 3,
+      "goalThreshold": 0.87,
+      "players": [
+        {
+          "label": "1",
+          "color": "#FF6B35"
+        },
+        {
+          "label": "2",
+          "color": "#B4FF50"
+        },
+        {
+          "label": "3",
+          "color": "#7aaff0"
+        },
+        {
+          "label": "D",
+          "color": "#FF3B5C"
+        }
+      ],
+      "startPositions": [
+        {
+          "x": 70,
+          "y": 155
+        },
+        {
+          "x": 185,
+          "y": 120
+        },
+        {
+          "x": 185,
+          "y": 220
+        },
+        {
+          "x": 240,
+          "y": 118
+        }
+      ],
+      "coneGate": [
+        {
+          "x": 350,
+          "y": 112
+        },
+        {
+          "x": 350,
+          "y": 168
+        }
+      ],
+      "startBall": {
+        "x": 70,
+        "y": 155
+      },
+      "states": {
+        "phase0": {
+          "label": "P1 passes \u2014 defender presses",
+          "players": [
+            {
+              "x": 70,
+              "y": 155
+            },
+            {
+              "x": 185,
+              "y": 120
+            },
+            {
+              "x": 185,
+              "y": 220
+            },
+            {
+              "x": 240,
+              "y": 118
+            }
+          ],
+          "ball": {
+            "x": 70,
+            "y": 155
+          },
+          "arrows": [
+            {
+              "from": 0,
+              "to": 1,
+              "dashed": false,
+              "color": "#B4FF50"
+            },
+            {
+              "from": 2,
+              "to": {
+                "x": 265,
+                "y": 195
+              },
+              "dashed": true,
+              "color": "#7aaff0"
+            },
+            {
+              "from": 0,
+              "to": {
+                "x": 150,
+                "y": 148
+              },
+              "dashed": true,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase1": {
+          "label": "P2 one-touch to P3!",
+          "players": [
+            {
+              "x": 145,
+              "y": 148
+            },
+            {
+              "x": 185,
+              "y": 120
+            },
+            {
+              "x": 265,
+              "y": 195
+            },
+            {
+              "x": 210,
+              "y": 120
+            }
+          ],
+          "ball": {
+            "x": 185,
+            "y": 120
+          },
+          "arrows": [
+            {
+              "from": 1,
+              "to": 2,
+              "dashed": false,
+              "color": "#7aaff0"
+            },
+            {
+              "from": 2,
+              "to": {
+                "x": 315,
+                "y": 185
+              },
+              "dashed": true,
+              "color": "#7aaff0"
+            }
+          ]
+        },
+        "phase2": {
+          "label": "P3 wide & free \u2014 shoots!",
+          "players": [
+            {
+              "x": 200,
+              "y": 145
+            },
+            {
+              "x": 205,
+              "y": 122
+            },
+            {
+              "x": 315,
+              "y": 185
+            },
+            {
+              "x": 232,
+              "y": 123
+            }
+          ],
+          "ball": {
+            "x": 315,
+            "y": 185
+          },
+          "arrows": [
+            {
+              "from": 2,
+              "to": {
+                "x": 375,
+                "y": 140
+              },
+              "dashed": false,
+              "color": "#7aaff0"
+            }
+          ]
+        },
+        "phase3": {
+          "label": "GOAL!",
+          "players": [
+            {
+              "x": 200,
+              "y": 145
+            },
+            {
+              "x": 205,
+              "y": 122
+            },
+            {
+              "x": 315,
+              "y": 185
+            },
+            {
+              "x": 232,
+              "y": 123
+            }
+          ],
+          "ball": {
+            "x": 378,
+            "y": 140
+          },
+          "arrows": []
+        }
+      },
+      "segments": [
+        {
+          "from": "phase0",
+          "to": "phase1",
+          "moveDuration": 1600,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase1",
+          "to": "phase2",
+          "moveDuration": 1600,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase2",
+          "to": "phase3",
+          "moveDuration": 1000,
+          "pauseDuration": 900
+        }
+      ]
+    }
+  },
+  {
+    "num": "06",
+    "cat": "DECISION MAKING",
+    "title": "FIND THE<br>FREE MAN",
+    "players": 5,
+    "time": 20,
+    "type": "ADVANCED",
+    "setup": {
+      "players": "5",
+      "area": "30 \u00d7 25m",
+      "duration": "20 min",
+      "equipment": "6 cones, 1 ball",
+      "overview": "With two defenders trying to mark two attackers, someone is always free \u2014 but only for a moment. This drill teaches Player 1 to look up, read the situation, and find the teammate who has been left unmarked. Defenders can't watch the ball and their player at the same time, so if Player 1 carries the ball forward, one defender will drift toward the ball and leave their player open. The key is spotting it and acting fast.",
+      "arrangement": [
+        "Set out a 30m \u00d7 25m area. Place 2 cones as the goal at the far end.",
+        "Player 1 starts at one end with the ball. Player 2 and Player 3 start centrally, one on each side. Defender 1 marks Player 2. Defender 2 marks Player 3.",
+        "Both defenders start in realistic marking positions \u2014 close, but not right on top of the attackers.",
+        "Player 1 carries the ball forward. As Player 1 moves, Defender 2 should naturally drift toward the ball \u2014 leaving Player 3 open. Player 1 spots this and plays through to Player 3.",
+        "Rotate all roles regularly. This is a complex drill \u2014 expect it to take a few goes before it clicks."
+      ]
+    },
+    "cues": [
+      {
+        "phase": "PLAYER 1 \u2014 CARRY FORWARD",
+        "text": "Player 1 carries the ball forward with purpose \u2014 head up, looking at the defenders' positions as they move. The carry draws one of the defenders toward the ball. Player 1 must spot which defender has moved and which attacker is now free.",
+        "quote": "Carry with your head up \u2014 watch the defenders, not the ball.",
+        "note": "This is genuinely difficult. Don't expect it immediately. If Player 1 is staring at the ball, remind them: the information they need is in the defenders' positions, not on the ball."
+      },
+      {
+        "phase": "PLAYER 2 \u2014 THE DECOY RUN",
+        "text": "Player 2 makes a run toward goal \u2014 this is to keep Defender 1 occupied and away from the space Player 3 is moving into. Player 2 may not get the ball. Their job is to take their defender with them.",
+        "quote": "Run hard \u2014 even if you don't get the ball, your run matters.",
+        "note": "Make sure Player 2 understands they might not score. Praise their run explicitly when it creates space for Player 3, even when they don't receive."
+      },
+      {
+        "phase": "DEFENDER 2 \u2014 WATCH THE BALL",
+        "text": "At some point, Defender 2 will glance toward the ball instead of watching Player 3. That tiny moment of ball-watching is when Player 3 gets free. Player 1 needs to spot this and play the pass immediately.",
+        "quote": "The moment a defender looks at the ball \u2014 their player is free.",
+        "note": "This is the coaching concept at the heart of the drill. Explaining it clearly to all players \u2014 including the defenders \u2014 helps everyone understand what's happening and why."
+      },
+      {
+        "phase": "THE PASS TO PLAYER 3",
+        "text": "When Player 1 sees Player 3 is free, the pass needs to go immediately \u2014 not after another touch or a look around. The window of freedom is short. The pass should go through the gap and into the space Player 3 is running into.",
+        "quote": "See it, play it \u2014 don't wait.",
+        "note": ""
+      }
+    ],
+    "progressions": [
+      {
+        "signal": "ready",
+        "label": "START HERE",
+        "title": "Walk through slowly",
+        "desc": "Do the drill at walking pace with the Defenders moving slowly and obviously. Player 1 carries slowly while both attackers walk their runs. This lets everyone see the shape of the movement before adding speed.",
+        "why": "Five players moving at once is a lot. Slow pace lets everyone understand their role and see how the defenders' movements create space."
+      },
+      {
+        "signal": "ready",
+        "label": "WHEN READY",
+        "title": "Defenders move faster",
+        "desc": "Defenders now move at a realistic pace. Defender 2 drifts toward the ball naturally as Player 1 carries. Player 1 must read this faster and pass before the moment closes.",
+        "why": "Faster defenders shorten the window. This is where the reading skill is really tested."
+      },
+      {
+        "signal": "challenge",
+        "label": "ADD A CHALLENGE",
+        "title": "Defenders can intercept",
+        "desc": "Defenders can now attempt to intercept the pass if Player 1 plays into their area. Player 1 must pick the gap carefully, not just see a player is free but make sure the passing lane is clear too.",
+        "why": "This is match realistic. A free player doesn't help if the pass gets cut out. Player 1 now has to read two things \u2014 who is free, and whether the pass can reach them safely."
+      },
+      {
+        "signal": "challenge",
+        "label": "PROGRESS",
+        "title": "Player 1 decides \u2014 any option",
+        "desc": "Remove the pre-set pattern entirely. Either Player 2 or Player 3 might be the free player depending on how the defenders move. Player 1 must read and react in real time.",
+        "why": "This is the full version. The drill now looks exactly like match play \u2014 carry, read, decide, execute. It's challenging but hugely rewarding when it clicks."
+      }
+    ],
+    "mistakes": [
+      {
+        "problem": "Player 1 passes immediately without carrying first",
+        "cause": "They're nervous about losing the ball or not confident dribbling.",
+        "fix": "Insist on at least 3 forward touches before passing. The carry is what causes the defenders to react. Without it, neither defender moves and both attackers stay marked."
+      },
+      {
+        "problem": "Player 1 can't spot the free player",
+        "cause": "They're looking at the ball or the floor instead of the defenders.",
+        "fix": "After each attempt, ask Player 1 to describe where each defender was. Even if they don't know, the act of asking builds the habit of looking. As coach, narrate in real time: 'Defender 2 just looked at the ball \u2014 Player 3 is free!'"
+      },
+      {
+        "problem": "Player 2's decoy run is halfhearted and Defender 1 doesn't follow",
+        "cause": "Player 2 knows they might not get the ball and doesn't run full out.",
+        "fix": "Remind Player 2 that their run is just as important as a goal. If Defender 1 doesn't follow, Player 2 gets a point. Make the decoy run feel valued."
+      },
+      {
+        "problem": "Player 3 runs too early and Defender 2 has time to recover",
+        "cause": "Player 3 can't wait \u2014 they want to get moving.",
+        "fix": "Give Player 3 a clear trigger \u2014 wait until Defender 2 has taken a step toward the ball, then go. The two-step wait feels long but gives Defender 2 just enough time to get caught out of position."
+      }
+    ],
+    "config": {
+      "drillNum": "06",
+      "drillCat": "DECISION MAKING",
+      "title1": "FIND THE",
+      "title2": "FREE MAN",
+      "meta": [
+        "5 PLAYERS",
+        "20 MIN",
+        "ADVANCED"
+      ],
+      "seriesLabel": "SERIES 3 OF 3",
+      "phaseDots": 3,
+      "goalThreshold": 0.87,
+      "players": [
+        {
+          "label": "1",
+          "color": "#FF6B35"
+        },
+        {
+          "label": "2",
+          "color": "#B4FF50"
+        },
+        {
+          "label": "3",
+          "color": "#7aaff0"
+        },
+        {
+          "label": "D1",
+          "color": "#FF3B5C"
+        },
+        {
+          "label": "D2",
+          "color": "#FF3B5C"
+        }
+      ],
+      "startPositions": [
+        {
+          "x": 70,
+          "y": 140
+        },
+        {
+          "x": 175,
+          "y": 90
+        },
+        {
+          "x": 175,
+          "y": 225
+        },
+        {
+          "x": 220,
+          "y": 92
+        },
+        {
+          "x": 215,
+          "y": 155
+        }
+      ],
+      "coneGate": [
+        {
+          "x": 350,
+          "y": 112
+        },
+        {
+          "x": 350,
+          "y": 168
+        }
+      ],
+      "startBall": {
+        "x": 70,
+        "y": 140
+      },
+      "states": {
+        "phase0": {
+          "label": "P2 runs \u2014 draws the defender",
+          "players": [
+            {
+              "x": 70,
+              "y": 140
+            },
+            {
+              "x": 175,
+              "y": 90
+            },
+            {
+              "x": 175,
+              "y": 225
+            },
+            {
+              "x": 220,
+              "y": 92
+            },
+            {
+              "x": 215,
+              "y": 155
+            }
+          ],
+          "ball": {
+            "x": 70,
+            "y": 140
+          },
+          "arrows": [
+            {
+              "from": 1,
+              "to": {
+                "x": 248,
+                "y": 88
+              },
+              "dashed": true,
+              "color": "#B4FF50"
+            },
+            {
+              "from": 2,
+              "to": {
+                "x": 260,
+                "y": 218
+              },
+              "dashed": true,
+              "color": "#7aaff0"
+            },
+            {
+              "from": 0,
+              "to": {
+                "x": 182,
+                "y": 140
+              },
+              "dashed": true,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase1": {
+          "label": "D2 ball-watches \u2014 P3 is free!",
+          "players": [
+            {
+              "x": 180,
+              "y": 140
+            },
+            {
+              "x": 245,
+              "y": 88
+            },
+            {
+              "x": 260,
+              "y": 218
+            },
+            {
+              "x": 248,
+              "y": 90
+            },
+            {
+              "x": 228,
+              "y": 150
+            }
+          ],
+          "ball": {
+            "x": 180,
+            "y": 140
+          },
+          "arrows": [
+            {
+              "from": 0,
+              "to": 2,
+              "dashed": false,
+              "color": "#7aaff0"
+            },
+            {
+              "from": 2,
+              "to": {
+                "x": 315,
+                "y": 210
+              },
+              "dashed": true,
+              "color": "#7aaff0"
+            }
+          ]
+        },
+        "phase2": {
+          "label": "P3 wide & free \u2014 shoots!",
+          "players": [
+            {
+              "x": 210,
+              "y": 140
+            },
+            {
+              "x": 268,
+              "y": 88
+            },
+            {
+              "x": 315,
+              "y": 210
+            },
+            {
+              "x": 268,
+              "y": 92
+            },
+            {
+              "x": 248,
+              "y": 152
+            }
+          ],
+          "ball": {
+            "x": 315,
+            "y": 210
+          },
+          "arrows": [
+            {
+              "from": 2,
+              "to": {
+                "x": 375,
+                "y": 140
+              },
+              "dashed": false,
+              "color": "#7aaff0"
+            }
+          ]
+        },
+        "phase3": {
+          "label": "GOAL!",
+          "players": [
+            {
+              "x": 210,
+              "y": 140
+            },
+            {
+              "x": 268,
+              "y": 88
+            },
+            {
+              "x": 315,
+              "y": 210
+            },
+            {
+              "x": 268,
+              "y": 92
+            },
+            {
+              "x": 248,
+              "y": 152
+            }
+          ],
+          "ball": {
+            "x": 378,
+            "y": 140
+          },
+          "arrows": []
+        }
+      },
+      "segments": [
+        {
+          "from": "phase0",
+          "to": "phase1",
+          "moveDuration": 1800,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase1",
+          "to": "phase2",
+          "moveDuration": 1500,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase2",
+          "to": "phase3",
+          "moveDuration": 1000,
+          "pauseDuration": 900
+        }
+      ]
+    }
+  },
+  {
+    "num": "07",
+    "cat": "FINISHING",
+    "title": "NEAR POST<br>RUN",
+    "players": 2,
+    "time": 10,
+    "type": "FINISHING",
+    "setup": {
+      "players": "2",
+      "area": "25 \u00d7 20m",
+      "duration": "10 min",
+      "equipment": "4 cones, 1 ball",
+      "overview": "The near post run is one of the most natural and effective ways to score in football. Player 2 runs from a central position toward the post closest to where the ball is coming from. The ball and the player arrive at the same time \u2014 making it very hard for a goalkeeper to react. The key is timing. This drill is simple to set up but needs patience to get the timing right.",
+      "arrangement": [
+        "Set out the area with cones. Place 2 cones as the goal at the far end, roughly 1 metre apart.",
+        "Player 1 starts wide on one side of the pitch, level with the penalty area \u2014 this is the delivery player. They stay wide.",
+        "Player 2 starts near the centre spot. Their job is to make the near post run and finish.",
+        "The near post is the cone on the same side as Player 1 \u2014 the closest one to them.",
+        "Player 2 must start running before Player 1 passes. Player 1 watches the run and delivers as Player 2 arrives at the post.",
+        "Swap roles after every 5 goes. Also try it from the opposite side so Player 2 practices running to both posts."
+      ]
+    },
+    "cues": [
+      {
+        "phase": "PLAYER 2 \u2014 START EARLY",
+        "text": "Player 2 must start their run before the ball is played \u2014 not after. This is the most important thing in this drill. If they wait for the pass, they'll arrive too late and have to stop and wait for the ball, which a goalkeeper can deal with easily.",
+        "quote": "Start running before the pass \u2014 trust it's coming.",
+        "note": "Players will naturally wait to see the ball played before moving. Challenge this every time. Tell Player 2 to watch Player 1's body shape \u2014 when Player 1 plants their standing foot ready to kick, that's the trigger to go."
+      },
+      {
+        "phase": "PLAYER 2 \u2014 RUN AT FULL PACE",
+        "text": "The run must be a sprint \u2014 not a jog, not a trot. A near post run only works when the player arrives at pace. A slow arrival gives the goalkeeper time to set and cut down the angle. Full sprint, every time.",
+        "quote": "Sprint to the post \u2014 don't jog.",
+        "note": ""
+      },
+      {
+        "phase": "PLAYER 1 \u2014 TIMING THE DELIVERY",
+        "text": "Player 1 watches Player 2's run and plays the ball to the near post just before Player 2 arrives there. The ball should arrive at the same time as Player 2, not before and not after. Aim for the near post cone, not the player directly.",
+        "quote": "Deliver to the post, not to the player.",
+        "note": "This is hard to get right. Be patient. If the timing is consistently off, slow everything down \u2014 Player 2 walks the run while Player 1 rolls the ball. They can feel the right timing at slow pace."
+      },
+      {
+        "phase": "THE FINISH",
+        "text": "Player 2 doesn't stop when they arrive \u2014 they redirect the ball across goal with the inside of their foot. Opening the body slightly as they arrive makes this easier. The finish should go across the goal, not straight at where they're running from.",
+        "quote": "Redirect across goal \u2014 don't stop, just guide it.",
+        "note": "Players will try to blast it. A redirected finish is much harder for a goalkeeper to save. Show them the technique \u2014 open body, inside of foot, across goal."
+      }
+    ],
+    "progressions": [
+      {
+        "signal": "ready",
+        "label": "START HERE",
+        "title": "Player 1 stands still",
+        "desc": "Player 1 delivers from a standing position \u2014 no movement, just a simple pass from wide. Player 2 focuses entirely on the run and finish. Remove as much complexity as possible first.",
+        "why": "If both players are moving, timing problems are hard to diagnose. Static delivery isolates the run and finish so players can focus on getting those right first."
+      },
+      {
+        "signal": "ready",
+        "label": "WHEN READY",
+        "title": "Player 1 dribbles before delivering",
+        "desc": "Player 1 now takes 3-4 touches moving forward before delivering. Player 2 uses Player 1's movement as the trigger to start running \u2014 when Player 1 moves forward, Player 2 goes.",
+        "why": "This is closer to a real match where a winger drives at the defender before crossing. The visual trigger also helps Player 2 time the run better."
+      },
+      {
+        "signal": "challenge",
+        "label": "SWITCH SIDES",
+        "title": "Try from the other side",
+        "desc": "Player 1 moves to the opposite side of the pitch. Player 2 now runs to the other near post. Everything is mirrored. Practice both sides equally.",
+        "why": "In a match, near post runs happen from both sides. A player who can only attack one post is predictable and easier to defend against."
+      },
+      {
+        "signal": "challenge",
+        "label": "ADD A CHALLENGE",
+        "title": "Add a keeper or passive defender",
+        "desc": "Place a player in goal or at the near post to represent a goalkeeper or defender. Player 2 must now arrive at pace to get there first. The person in goal can wave their hands to narrow the target but should let Player 2 score if the timing is good.",
+        "why": "A target in goal introduces the element of beating someone. Player 2 must arrive faster and finish more accurately."
+      }
+    ],
+    "mistakes": [
+      {
+        "problem": "Player 2 arrives before the ball and has to stand and wait",
+        "cause": "Player 2 started too early, or Player 1 delivered too late.",
+        "fix": "First work out which player is causing the problem. Ask Player 1 to call out 'now' as they pass. If Player 2 is at the post long before the call, they're running too early. If the call comes and Player 2 is still on their way, Player 1 is passing too late."
+      },
+      {
+        "problem": "Player 2 jogs rather than sprints",
+        "cause": "They're being cautious, unsure if the ball will come.",
+        "fix": "Tell Player 2 the run only works at full speed. A jogging arrival means the goalkeeper has time to react. Make full sprint pace a rule from the start, not optional."
+      },
+      {
+        "problem": "The finish goes wide or over the goal",
+        "cause": "Player 2 is arriving off balance or squaring up and trying to hit hard.",
+        "fix": "Practise the finish technique separately \u2014 Player 1 rolls the ball gently to a stationary Player 2 who just redirects it across. Build the muscle memory for the redirected finish before adding the run."
+      },
+      {
+        "problem": "Player 1 consistently delivers too early or too late",
+        "cause": "Player 1 isn't watching Player 2's run \u2014 they're looking at the ball or delivering by instinct.",
+        "fix": "Tell Player 1 to track Player 2's movement the whole time. When Player 2 is about halfway through the run, that's usually the moment to release the ball. This is easier to feel with practice than to calculate \u2014 repetition is the fix."
+      }
+    ],
+    "config": {
+      "drillNum": "07",
+      "drillCat": "FINISHING",
+      "title1": "NEAR POST",
+      "title2": "RUN",
+      "meta": [
+        "2 PLAYERS",
+        "10 MIN",
+        "FINISHING"
+      ],
+      "seriesLabel": "SERIES 1 OF 3",
+      "phaseDots": 2,
+      "goalThreshold": 0.87,
+      "players": [
+        {
+          "label": "1",
+          "color": "#FF6B35"
+        },
+        {
+          "label": "2",
+          "color": "#B4FF50"
+        }
+      ],
+      "startPositions": [
+        {
+          "x": 240,
+          "y": 245
+        },
+        {
+          "x": 182,
+          "y": 140
+        }
+      ],
+      "coneGate": [
+        {
+          "x": 350,
+          "y": 112
+        },
+        {
+          "x": 350,
+          "y": 168
+        }
+      ],
+      "startBall": {
+        "x": 240,
+        "y": 245
+      },
+      "states": {
+        "phase0": {
+          "label": "P2 runs \u2014 P1 delivers simultaneously",
+          "players": [
+            {
+              "x": 240,
+              "y": 245
+            },
+            {
+              "x": 182,
+              "y": 140
+            }
+          ],
+          "ball": {
+            "x": 240,
+            "y": 245
+          },
+          "arrows": [
+            {
+              "from": 1,
+              "to": {
+                "x": 345,
+                "y": 168
+              },
+              "dashed": true,
+              "color": "#B4FF50"
+            },
+            {
+              "from": 0,
+              "to": {
+                "x": 345,
+                "y": 168
+              },
+              "dashed": false,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase1": {
+          "label": "P2 & ball arrive together \u2014 finish!",
+          "players": [
+            {
+              "x": 240,
+              "y": 245
+            },
+            {
+              "x": 345,
+              "y": 168
+            }
+          ],
+          "ball": {
+            "x": 345,
+            "y": 168
+          },
+          "arrows": [
+            {
+              "from": 1,
+              "to": {
+                "x": 375,
+                "y": 155
+              },
+              "dashed": false,
+              "color": "#B4FF50"
+            }
+          ]
+        },
+        "phase2": {
+          "label": "GOAL!",
+          "players": [
+            {
+              "x": 240,
+              "y": 245
+            },
+            {
+              "x": 345,
+              "y": 168
+            }
+          ],
+          "ball": {
+            "x": 378,
+            "y": 155
+          },
+          "arrows": []
+        }
+      },
+      "segments": [
+        {
+          "from": "phase0",
+          "to": "phase1",
+          "moveDuration": 1800,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase1",
+          "to": "phase2",
+          "moveDuration": 1000,
+          "pauseDuration": 900
+        }
+      ]
+    }
+  },
+  {
+    "num": "08",
+    "cat": "FINISHING",
+    "title": "FAR POST<br>ATTACK",
+    "players": 4,
+    "time": 15,
+    "type": "FINISHING",
+    "setup": {
+      "players": "4",
+      "area": "30 \u00d7 25m",
+      "duration": "15 min",
+      "equipment": "6 cones, 1 ball",
+      "overview": "This drill introduces the idea of using one player's run to create space for another. Player 2 runs hard to the near post \u2014 but their job is to pull the Defender away, not to score. Player 3 watches and waits, then attacks the far post once the Defender has followed Player 2. When it works, Player 3 gets a free run at goal from an unmarked position. Learning to run without the ball, and to be patient, are both big skills for young players.",
+      "arrangement": [
+        "Set out a 30m \u00d7 25m area. Place 2 cones as the goal at the far end.",
+        "Player 1 starts wide on one side of the pitch with the ball \u2014 the delivery player.",
+        "Player 2 and Player 3 start centrally, about 15 metres from goal. Player 2 is on the near post side, Player 3 is on the far post side.",
+        "The Defender starts centrally between Player 2 and Player 3, marking Player 2.",
+        "Player 2 runs hard to the near post. The Defender follows. Player 3 waits and then attacks the far post once the Defender has committed.",
+        "Rotate all roles every 5-6 goes. Run from both sides."
+      ]
+    },
+    "cues": [
+      {
+        "phase": "PLAYER 2 \u2014 RUN LIKE YOU MEAN IT",
+        "text": "Player 2's near post run must be convincing \u2014 a full sprint, as if they expect to score. If they jog, the Defender won't follow them, and the whole move falls apart. Player 2 works hard here and probably won't get the ball, and that's fine. Their effort creates the goal.",
+        "quote": "Sprint to the near post \u2014 make the defender follow you.",
+        "note": "This is hard for young players to accept. They want the ball. Make a point of praising Player 2's run out loud every single time, even when Player 3 scores. The run is the reason the goal happened."
+      },
+      {
+        "phase": "PLAYER 3 \u2014 WAIT, THEN GO",
+        "text": "Player 3 must be patient. The temptation is to run at the same time as Player 2, but if they do, the Defender can cover both of them. Player 3 watches the Defender \u2014 the moment the Defender's weight shifts toward Player 2, Player 3 goes for the far post at full pace.",
+        "quote": "Watch the defender \u2014 the moment they go, you go.",
+        "note": "Waiting is the hardest bit of this drill. Frame it positively: 'The longer you wait, the more space you'll have when you go.' The wait should be about 1-2 seconds \u2014 not long, but it feels long when you want to run."
+      },
+      {
+        "phase": "PLAYER 1 \u2014 WAIT FOR THE PICTURE",
+        "text": "Player 1 shouldn't rush the delivery. Hold the ball until Player 3's run is clearly open and the Defender is committed to Player 2. A patient delivery to an unmarked Player 3 is far better than an early cross that the Defender can reach.",
+        "quote": "Hold it \u2014 wait until you can see Player 3 is clear.",
+        "note": ""
+      },
+      {
+        "phase": "THE DELIVERY",
+        "text": "The cross should be low and to the far post \u2014 not a high cross, a low ball along the ground. Player 3 is arriving at pace and needs something they can redirect, not something they have to jump for. Aim for the far post cone.",
+        "quote": "Low and to the far post \u2014 let Player 3 run onto it.",
+        "note": ""
+      },
+      {
+        "phase": "THE FINISH",
+        "text": "Player 3 arrives at the far post and finishes first time \u2014 a redirect across goal with the inside of the foot, or a header for older players. Don't stop to control \u2014 arrive and finish in one movement.",
+        "quote": "One touch \u2014 redirect it across goal.",
+        "note": ""
+      }
+    ],
+    "progressions": [
+      {
+        "signal": "ready",
+        "label": "START HERE",
+        "title": "No defender",
+        "desc": "Run the drill without the Defender first. Player 2 and Player 3 both make their runs \u2014 near post and far post \u2014 and Player 1 delivers to Player 3. The focus is purely on the timing of the two runs and the delivery.",
+        "why": "Without a defender, the pattern of the drill can be learned cleanly. Both attackers can see the shape of the move and understand their job before adding defensive pressure."
+      },
+      {
+        "signal": "ready",
+        "label": "WHEN READY",
+        "title": "Passive defender",
+        "desc": "The Defender now jogs alongside Player 2 to the near post but doesn't challenge. Player 3 can see the Defender committing and uses this as the trigger to run. The timing of Player 3's run is what this stage is all about.",
+        "why": "A passive defender provides the visual cue Player 3 needs to time the run \u2014 without the drill breaking down because the Defender is too effective."
+      },
+      {
+        "signal": "challenge",
+        "label": "ADD A CHALLENGE",
+        "title": "Live defender",
+        "desc": "The Defender presses hard and tracks Player 2 at full pace. Player 3 must watch carefully and time the far post run precisely. Player 1 must hold the ball longer and wait for the picture to open.",
+        "why": "This is match realistic and is when the drill really tests player understanding. Timing becomes critical. Expect more mistakes \u2014 return to passive defender whenever it completely breaks down."
+      },
+      {
+        "signal": "challenge",
+        "label": "PROGRESS",
+        "title": "Player 1 decides",
+        "desc": "Remove the prescription. Player 1 can now deliver to either near or far post depending on who is free. The Defender can mark either player. Player 2 and Player 3 both make their runs and Player 1 reads who is clear.",
+        "why": "This is the full decision-making version. Real football doesn't give you a set pattern \u2014 Player 1 must read and react, just like in a match."
+      }
+    ],
+    "mistakes": [
+      {
+        "problem": "Player 2's decoy run is slow and the Defender doesn't follow",
+        "cause": "Player 2 knows they won't score and unconsciously slows down.",
+        "fix": "Tell Player 2 explicitly \u2014 if the Defender doesn't follow them, the move doesn't work and Player 3 can't score. Their full pace run is the most important part. Praise every convincing near post run loudly."
+      },
+      {
+        "problem": "Player 3 runs too early and the Defender has time to recover",
+        "cause": "Player 3 can't wait \u2014 they want to go.",
+        "fix": "Give Player 3 a count: wait two full seconds after Player 2 starts running, then go. Two seconds feels like a long time but gives the Defender just enough time to commit fully."
+      },
+      {
+        "problem": "Player 1 delivers too early and the Defender intercepts",
+        "cause": "Player 1 feels pressure to get rid of the ball quickly.",
+        "fix": "Ask Player 1 to say 'clear' out loud when they can see Player 3 has a run on. This forces a conscious read before the delivery rather than an instinctive early cross."
+      },
+      {
+        "problem": "The cross goes to the near post instead of the far post",
+        "cause": "The near post is closer and the natural direction for Player 1 to cross.",
+        "fix": "Make the far post the only target for this drill. Player 1 aims for the far post cone specifically. If it keeps going near post, move Player 1 further back so the angle to the far post is easier to reach."
+      },
+      {
+        "problem": "Player 3 arrives at the far post before the ball",
+        "cause": "Player 3 started the run too early, or Player 1 held the ball too long.",
+        "fix": "The ball and Player 3 should arrive at the same time \u2014 just like the near post run drill. As a rule: Player 1 delivers at the moment Player 3 begins their run, not when Player 3 arrives."
+      }
+    ],
+    "config": {
+      "drillNum": "08",
+      "drillCat": "FINISHING",
+      "title1": "FAR POST",
+      "title2": "ATTACK",
+      "meta": [
+        "4 PLAYERS",
+        "15 MIN",
+        "FINISHING"
+      ],
+      "seriesLabel": "SERIES 2 OF 3",
+      "phaseDots": 3,
+      "goalThreshold": 0.87,
+      "players": [
+        {
+          "label": "1",
+          "color": "#FF6B35"
+        },
+        {
+          "label": "2",
+          "color": "#B4FF50"
+        },
+        {
+          "label": "3",
+          "color": "#7aaff0"
+        },
+        {
+          "label": "D",
+          "color": "#FF3B5C"
+        }
+      ],
+      "startPositions": [
+        {
+          "x": 240,
+          "y": 245
+        },
+        {
+          "x": 200,
+          "y": 160
+        },
+        {
+          "x": 200,
+          "y": 115
+        },
+        {
+          "x": 260,
+          "y": 150
+        }
+      ],
+      "coneGate": [
+        {
+          "x": 350,
+          "y": 112
+        },
+        {
+          "x": 350,
+          "y": 168
+        }
+      ],
+      "startBall": {
+        "x": 240,
+        "y": 245
+      },
+      "states": {
+        "phase0": {
+          "label": "P2 near post decoy, P3 far post run",
+          "players": [
+            {
+              "x": 240,
+              "y": 245
+            },
+            {
+              "x": 200,
+              "y": 160
+            },
+            {
+              "x": 200,
+              "y": 115
+            },
+            {
+              "x": 260,
+              "y": 150
+            }
+          ],
+          "ball": {
+            "x": 240,
+            "y": 245
+          },
+          "arrows": [
+            {
+              "from": 1,
+              "to": {
+                "x": 340,
+                "y": 168
+              },
+              "dashed": true,
+              "color": "#B4FF50"
+            },
+            {
+              "from": 2,
+              "to": {
+                "x": 305,
+                "y": 118
+              },
+              "dashed": true,
+              "color": "#7aaff0"
+            },
+            {
+              "from": 0,
+              "to": {
+                "x": 285,
+                "y": 245
+              },
+              "dashed": true,
+              "color": "#FF6B35"
+            }
+          ]
+        },
+        "phase1": {
+          "label": "D tracks P2 \u2014 P3 is free!",
+          "players": [
+            {
+              "x": 285,
+              "y": 245
+            },
+            {
+              "x": 340,
+              "y": 168
+            },
+            {
+              "x": 305,
+              "y": 118
+            },
+            {
+              "x": 340,
+              "y": 172
+            }
+          ],
+          "ball": {
+            "x": 285,
+            "y": 245
+          },
+          "arrows": [
+            {
+              "from": 0,
+              "to": 2,
+              "dashed": false,
+              "color": "#7aaff0"
+            },
+            {
+              "from": 2,
+              "to": {
+                "x": 345,
+                "y": 115
+              },
+              "dashed": true,
+              "color": "#7aaff0"
+            }
+          ]
+        },
+        "phase2": {
+          "label": "P3 finishes at far post!",
+          "players": [
+            {
+              "x": 285,
+              "y": 245
+            },
+            {
+              "x": 342,
+              "y": 168
+            },
+            {
+              "x": 345,
+              "y": 115
+            },
+            {
+              "x": 342,
+              "y": 172
+            }
+          ],
+          "ball": {
+            "x": 345,
+            "y": 115
+          },
+          "arrows": [
+            {
+              "from": 2,
+              "to": {
+                "x": 375,
+                "y": 128
+              },
+              "dashed": false,
+              "color": "#7aaff0"
+            }
+          ]
+        },
+        "phase3": {
+          "label": "GOAL!",
+          "players": [
+            {
+              "x": 285,
+              "y": 245
+            },
+            {
+              "x": 342,
+              "y": 168
+            },
+            {
+              "x": 345,
+              "y": 115
+            },
+            {
+              "x": 342,
+              "y": 172
+            }
+          ],
+          "ball": {
+            "x": 378,
+            "y": 128
+          },
+          "arrows": []
+        }
+      },
+      "segments": [
+        {
+          "from": "phase0",
+          "to": "phase1",
+          "moveDuration": 1800,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase1",
+          "to": "phase2",
+          "moveDuration": 1500,
+          "pauseDuration": 500
+        },
+        {
+          "from": "phase2",
+          "to": "phase3",
+          "moveDuration": 1000,
+          "pauseDuration": 900
+        }
+      ]
+    }
+  }
+];
+const pillLabels = ["01 \u00b7 WALL PASS", "02 \u00b7 THIRD MAN", "03 \u00b7 OVERLAP", "04 \u00b7 CARRY & RELEASE", "05 \u00b7 PASS PRESSURE", "06 \u00b7 FREE MAN", "07 \u00b7 NEAR POST", "08 \u00b7 FAR POST"];
+let cur = 0;
+
+// Build nav pills
+const nav = document.getElementById('drillNav');
+pillLabels.forEach((label, i) => {
+  const p = document.createElement('div');
+  p.className = 'drill-pill' + (i===0?' active':'');
+  p.dataset.drill = i;
+  p.textContent = label;
+  p.addEventListener('click', () => { cur=i; render(i); });
+  nav.appendChild(p);
+});
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderSetup(d){
+  return `<div class="setup-grid">
+    <div class="setup-item"><div class="setup-label">Players</div><div class="setup-value">${esc(d.setup.players)}</div></div>
+    <div class="setup-item"><div class="setup-label">Area</div><div class="setup-value">${esc(d.setup.area)}</div></div>
+    <div class="setup-item"><div class="setup-label">Duration</div><div class="setup-value">${esc(d.setup.duration)}</div></div>
+    <div class="setup-item"><div class="setup-label">Equipment</div><div class="setup-value">${esc(d.setup.equipment)}</div></div>
+  </div>
+  <div class="setup-section-title">Overview</div>
+  <p class="setup-desc">${esc(d.setup.overview)}</p>
+  <div class="setup-section-title">How to set up</div>
+  <ul class="setup-list">${d.setup.arrangement.map(a=>`<li>${esc(a)}</li>`).join('')}</ul>`;
+}
+
+function renderCues(d){
+  return `<ul class="cue-list">${d.cues.map(c=>`
+    <li class="cue-item">
+      <span class="cue-phase">${esc(c.phase)}</span>
+      <span class="cue-text">${esc(c.text)}</span>
+      <em class="cue-quote">"${esc(c.quote)}"</em>
+      ${c.note?`<span class="cue-note">⚑ ${esc(c.note)}</span>`:''}
+    </li>`).join('')}</ul>`;
+}
+
+function renderProgressions(d){
+  return `<ul class="prog-list">${d.progressions.map((p,i)=>`
+    <li class="prog-item">
+      <div class="prog-header"><span class="prog-num">${i+1}</span><span class="prog-title">${esc(p.title)}</span></div>
+      <span class="prog-signal ${esc(p.signal)}">${esc(p.label)}</span>
+      <div class="prog-desc">${esc(p.desc)}</div>
+      <div class="prog-why">Why: ${esc(p.why)}</div>
+    </li>`).join('')}</ul>`;
+}
+
+function renderMistakes(d){
+  return `<ul class="mistake-list">${d.mistakes.map(m=>`
+    <li class="mistake-item">
+      <div class="mistake-problem"><div class="mistake-dot"></div><div class="mistake-label">${esc(m.problem)}</div></div>
+      <div class="mistake-cause">Why this happens: ${esc(m.cause)}</div>
+      <div class="mistake-fix"><span class="fix-label">Fix: </span>${esc(m.fix)}</div>
+    </li>`).join('')}</ul>`;
+}
+
+function render(idx){
+  const d = drills[idx];
+  document.getElementById('drillNum').textContent = 'DRILL ' + d.num;
+  document.getElementById('drillCat').textContent = d.cat;
+  document.getElementById('drillTitle').innerHTML = d.title;
+  document.getElementById('specPlayers').textContent = d.players;
+  document.getElementById('specTime').textContent = d.time;
+  document.getElementById('specType').textContent = d.type;
+  document.getElementById('tab-setup').innerHTML = renderSetup(d);
+  document.getElementById('tab-cues').innerHTML = renderCues(d);
+  document.getElementById('tab-progressions').innerHTML = renderProgressions(d);
+  document.getElementById('tab-mistakes').innerHTML = renderMistakes(d);
+  document.getElementById('navProgress').textContent = (idx+1) + ' / ' + drills.length;
+  document.getElementById('btnPrev').disabled = idx===0;
+  document.getElementById('btnNext').disabled = idx===drills.length-1;
+  document.querySelectorAll('.drill-pill').forEach((p,i)=>p.classList.toggle('active',i===idx));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab==='setup'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-setup'));
+  document.getElementById('mainSVG').innerHTML='';
+  runDrill(d.config);
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+document.getElementById('btnPrev').addEventListener('click',()=>{ if(cur>0){cur--;render(cur);window.scrollTo(0,0);} });
+document.getElementById('btnNext').addEventListener('click',()=>{ if(cur<drills.length-1){cur++;render(cur);window.scrollTo(0,0);} });
+document.addEventListener('click',e=>{ if(e.target.classList.contains('speed-btn')){ document.querySelectorAll('.speed-btn').forEach(b=>b.classList.remove('active')); e.target.classList.add('active'); } });
+
+render(0);
+</script>
+</body>
+</html>
