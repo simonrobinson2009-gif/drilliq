@@ -3,109 +3,962 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DrillIQ — Drill Library</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800;900&display=swap" rel="stylesheet">
+<title>DrillIQ — U8/U10 Coaching Pack</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:#07070f;min-height:100vh;font-family:'Barlow Condensed',sans-serif;color:#fff;padding:40px 24px;}
-  header{max-width:600px;margin:0 auto 48px;}
-  .logo{font-size:42px;font-weight:900;letter-spacing:1px;line-height:1;}
-  .logo span:first-child{color:#B4FF50;}
-  .logo span:last-child{color:#fff;}
-  .tagline{color:rgba(255,255,255,0.3);font-size:13px;letter-spacing:4px;margin-top:6px;text-transform:uppercase;}
-  .grid{max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:16px;}
-  .drill-card{
-    background:#0a0f1e;
-    border:1px solid #1a2a1a;
-    border-radius:16px;
-    padding:24px 28px;
-    text-decoration:none;
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    transition:border-color .2s, box-shadow .2s;
-  }
-  .drill-card:hover{border-color:rgba(180,255,80,0.4);box-shadow:0 0 30px rgba(180,255,80,0.08);}
-  .drill-num{font-size:11px;font-weight:700;letter-spacing:4px;color:rgba(180,255,80,0.5);margin-bottom:6px;}
-  .drill-title{font-size:26px;font-weight:900;letter-spacing:1px;line-height:1.1;}
-  .drill-meta{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
-  .pill{
-    background:rgba(255,255,255,0.04);
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius:4px;
-    padding:3px 10px;
-    font-size:10px;
-    font-weight:600;
-    letter-spacing:2px;
-    color:rgba(255,255,255,0.35);
-  }
-  .arrow{color:rgba(180,255,80,0.4);font-size:24px;}
-  .series-badge{
-    font-size:9px;font-weight:700;letter-spacing:2px;
-    color:rgba(180,255,80,0.5);
-    background:rgba(180,255,80,0.06);
-    border:1px solid rgba(180,255,80,0.15);
-    border-radius:4px;padding:3px 8px;
-    display:inline-block;margin-bottom:10px;
-  }
-  footer{max-width:600px;margin:48px auto 0;text-align:center;color:rgba(255,255,255,0.15);font-size:11px;letter-spacing:3px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --green:#0f3d1e;
+  --green-mid:#1a5c2e;
+  --green-light:#e8f4eb;
+  --orange:#FF6B35;
+  --orange-dark:#e05520;
+  --lime:#7bc142;
+  --white:#ffffff;
+  --off-white:#f7f9f7;
+  --grey:#f0f3f0;
+  --text:#1a2e1d;
+  --text-mid:#4a6650;
+  --text-light:#7a9680;
+  --border:#d4e4d8;
+}
+
+html{scroll-behavior:smooth;}
+body{font-family:"Barlow",sans-serif;color:var(--text);background:var(--white);overflow-x:hidden;}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(255,255,255,0.96);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:60px;
+}
+.nav-logo{font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:22px;letter-spacing:.06em;color:var(--green);}
+.nav-logo span{color:var(--orange);}
+.nav-cta{
+  background:var(--orange);color:var(--white);
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;
+  font-size:14px;letter-spacing:.08em;
+  padding:9px 20px;border-radius:8px;border:none;cursor:pointer;
+  text-decoration:none;transition:background .15s;
+}
+.nav-cta:hover{background:var(--orange-dark);}
+
+/* ── HERO ── */
+.hero{
+  background:var(--green);
+  position:relative;overflow:hidden;
+  padding:72px 24px 80px;
+}
+/* Subtle pitch lines */
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+}
+.hero-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:60px;align-items:center;
+}
+@media(max-width:760px){
+  .hero-inner{grid-template-columns:1fr;gap:48px;}
+  .hero-right{order:-1;}
+}
+.hero-tag{
+  display:inline-block;
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;
+  font-size:12px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--lime);border:1px solid rgba(123,193,66,.35);
+  background:rgba(123,193,66,.1);
+  padding:5px 12px;border-radius:20px;margin-bottom:20px;
+}
+.hero h1{
+  font-family:"Barlow Condensed",sans-serif;font-weight:900;
+  font-size:clamp(42px,6vw,72px);line-height:.95;
+  letter-spacing:.01em;text-transform:uppercase;
+  color:var(--white);margin-bottom:24px;
+}
+.hero h1 em{color:var(--orange);font-style:normal;}
+.hero-body{
+  font-family:"Lora",serif;font-size:17px;line-height:1.7;
+  color:rgba(255,255,255,.75);margin-bottom:36px;
+  max-width:480px;
+}
+.hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.btn-primary{
+  background:var(--orange);color:var(--white);
+  font-family:"Barlow Condensed",sans-serif;font-weight:800;
+  font-size:16px;letter-spacing:.08em;
+  padding:14px 28px;border-radius:10px;border:none;
+  cursor:pointer;text-decoration:none;transition:background .15s;
+  display:inline-block;
+}
+.btn-primary:hover{background:var(--orange-dark);}
+.btn-secondary{
+  color:rgba(255,255,255,.7);
+  font-size:14px;font-weight:500;
+  text-decoration:none;border-bottom:1px solid rgba(255,255,255,.3);
+  transition:color .15s;
+}
+.btn-secondary:hover{color:var(--white);}
+
+/* Hero animation card */
+.hero-right{display:flex;justify-content:center;}
+.anim-phone{
+  background:#0d2a14;
+  border:2px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:16px;
+  box-shadow:0 32px 80px rgba(0,0,0,.5);
+  width:100%;max-width:260px;
+  position:relative;
+}
+.anim-phone-label{
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;
+  font-size:10px;letter-spacing:.15em;color:rgba(255,255,255,.4);
+  text-align:center;margin-bottom:10px;
+}
+.anim-phone svg{width:100%;height:auto;display:block;}
+.anim-phone-controls{
+  display:flex;gap:8px;margin-top:12px;
+}
+.phone-btn{
+  flex:1;font-family:"Barlow Condensed",sans-serif;font-weight:700;
+  font-size:12px;padding:8px;border-radius:8px;border:none;cursor:pointer;
+  transition:all .15s;
+}
+.phone-play{background:var(--orange);color:#000;}
+.phone-play:hover{background:#ff8555;}
+.phone-reset{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);}
+
+/* ── TRUST BAR ── */
+.trust-bar{
+  background:var(--off-white);border-bottom:1px solid var(--border);
+  padding:20px 24px;
+}
+.trust-inner{
+  max-width:1100px;margin:0 auto;
+  display:flex;align-items:center;justify-content:center;
+  gap:40px;flex-wrap:wrap;
+}
+.trust-item{
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:600;color:var(--text-mid);
+  letter-spacing:.02em;
+}
+.trust-icon{font-size:16px;}
+
+/* ── SECTIONS ── */
+section{padding:80px 24px;}
+.section-inner{max-width:1100px;margin:0 auto;}
+.section-tag{
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--orange);display:block;margin-bottom:12px;
+}
+.section-title{
+  font-family:"Barlow Condensed",sans-serif;font-weight:900;
+  font-size:clamp(32px,4vw,48px);line-height:1;
+  letter-spacing:.02em;text-transform:uppercase;
+  color:var(--green);margin-bottom:16px;
+}
+.section-body{
+  font-family:"Lora",serif;font-size:16px;line-height:1.75;
+  color:var(--text-mid);max-width:560px;margin-bottom:48px;
+}
+
+/* ── WHAT'S INSIDE ── */
+.inside-bg{background:var(--off-white);}
+.drill-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:16px;
+}
+.drill-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:12px;padding:18px 20px;
+  transition:border-color .2s,box-shadow .2s;
+  position:relative;overflow:hidden;
+}
+.drill-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;
+  height:3px;background:var(--orange);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .2s;
+}
+.drill-card:hover{border-color:rgba(255,107,53,.3);box-shadow:0 4px 20px rgba(255,107,53,.08);}
+.drill-card:hover::before{transform:scaleX(1);}
+.drill-card-num{
+  font-family:"Barlow Condensed",sans-serif;font-weight:900;
+  font-size:11px;letter-spacing:.15em;color:var(--text-light);
+  margin-bottom:6px;
+}
+.drill-card-title{
+  font-family:"Barlow Condensed",sans-serif;font-weight:800;
+  font-size:18px;line-height:1.1;color:var(--green);
+  text-transform:uppercase;margin-bottom:8px;
+}
+.drill-card-meta{
+  display:flex;gap:8px;flex-wrap:wrap;
+}
+.drill-tag{
+  font-size:11px;font-weight:600;letter-spacing:.05em;
+  padding:3px 8px;border-radius:6px;
+  background:var(--grey);color:var(--text-mid);
+}
+.drill-tag.cat-passing{background:#e8f0ff;color:#3050aa;}
+.drill-tag.cat-dribbling{background:#fff4e8;color:#aa5020;}
+.drill-tag.cat-finishing{background:#e8fff0;color:#1a7a3a;}
+.drill-tag.cat-decision{background:#f5e8ff;color:#7030aa;}
+
+/* ── HOW IT WORKS ── */
+.steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:32px;}
+.step{display:flex;gap:20px;align-items:flex-start;}
+.step-num{
+  font-family:"Barlow Condensed",sans-serif;font-weight:900;
+  font-size:48px;line-height:1;color:var(--border);flex-shrink:0;
+  width:52px;
+}
+.step-content{}
+.step-title{
+  font-family:"Barlow Condensed",sans-serif;font-weight:800;
+  font-size:18px;text-transform:uppercase;color:var(--green);
+  margin-bottom:6px;
+}
+.step-desc{font-size:14px;line-height:1.65;color:var(--text-mid);}
+
+/* ── WHAT YOU GET ── */
+.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px;}
+.feature{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:12px;padding:24px;
+}
+.feature-icon{font-size:28px;margin-bottom:12px;display:block;}
+.feature-title{
+  font-family:"Barlow Condensed",sans-serif;font-weight:800;
+  font-size:17px;text-transform:uppercase;color:var(--green);margin-bottom:8px;
+}
+.feature-desc{font-size:13px;line-height:1.65;color:var(--text-mid);}
+
+/* ── PRICING ── */
+.pricing-bg{background:var(--green);}
+.pricing-card{
+  background:var(--white);border-radius:20px;
+  padding:48px;max-width:520px;margin:0 auto;
+  box-shadow:0 32px 80px rgba(0,0,0,.25);
+  text-align:center;
+}
+.price-tag{
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;
+  font-size:13px;letter-spacing:.15em;color:var(--text-light);
+  text-transform:uppercase;margin-bottom:8px;display:block;
+}
+.price{
+  font-family:"Barlow Condensed",sans-serif;font-weight:900;
+  font-size:80px;line-height:1;color:var(--green);
+  letter-spacing:-.02em;
+}
+.price sup{font-size:36px;vertical-align:super;}
+.price-note{font-size:14px;color:var(--text-light);margin-top:6px;margin-bottom:32px;}
+.price-includes{
+  text-align:left;border-top:1px solid var(--border);
+  padding-top:28px;margin-bottom:32px;
+}
+.price-includes-title{
+  font-family:"Barlow Condensed",sans-serif;font-weight:800;
+  font-size:12px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text-light);margin-bottom:16px;
+}
+.price-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:7px 0;font-size:14px;color:var(--text);line-height:1.4;
+}
+.price-item-check{
+  color:var(--lime);font-weight:700;flex-shrink:0;margin-top:1px;
+}
+.btn-buy{
+  width:100%;background:var(--orange);color:var(--white);
+  font-family:"Barlow Condensed",sans-serif;font-weight:800;
+  font-size:18px;letter-spacing:.08em;
+  padding:18px;border-radius:12px;border:none;cursor:pointer;
+  text-decoration:none;display:block;transition:background .15s;
+  margin-bottom:14px;
+}
+.btn-buy:hover{background:var(--orange-dark);}
+.price-guarantee{font-size:12px;color:var(--text-light);line-height:1.5;}
+
+/* ── FAQ ── */
+.faq-list{max-width:680px;margin:0 auto;}
+.faq-item{border-bottom:1px solid var(--border);padding:20px 0;}
+.faq-item:first-child{border-top:1px solid var(--border);}
+.faq-q{
+  font-family:"Barlow Condensed",sans-serif;font-weight:800;
+  font-size:18px;color:var(--green);cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:16px;
+}
+.faq-icon{color:var(--orange);font-size:20px;flex-shrink:0;transition:transform .2s;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-a{
+  font-family:"Lora",serif;font-size:15px;line-height:1.7;
+  color:var(--text-mid);padding-top:12px;
+  display:none;
+}
+.faq-item.open .faq-a{display:block;}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--green);
+  padding:40px 24px;text-align:center;
+}
+.footer-logo{
+  font-family:"Barlow Condensed",sans-serif;font-weight:900;
+  font-size:24px;letter-spacing:.06em;color:var(--white);margin-bottom:8px;
+}
+.footer-logo span{color:var(--orange);}
+.footer-sub{font-size:13px;color:rgba(255,255,255,.4);}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.fade-up{opacity:0;animation:fadeUp .6s ease forwards;}
+.fade-up-1{animation-delay:.1s;}
+.fade-up-2{animation-delay:.25s;}
+.fade-up-3{animation-delay:.4s;}
+.fade-up-4{animation-delay:.55s;}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo"><span>DRILL</span><span>IQ</span></div>
-  <div class="tagline">Football Drill Animations · U8 – U10</div>
-</header>
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">DRILL<span>IQ</span></div>
+  <a href="#pricing" class="nav-cta">GET THE PACK — £9.99</a>
+</nav>
 
-<div class="grid">
-
-  <a class="drill-card" href="drills/drill-01.html">
-    <div>
-      <div class="series-badge">SERIES 1 OF 3</div>
-      <div class="drill-num">DRILL 01 · PASSING</div>
-      <div class="drill-title">THE BASIC<br>WALL PASS</div>
-      <div class="drill-meta">
-        <span class="pill">2 PLAYERS</span>
-        <span class="pill">10 MIN</span>
-        <span class="pill">PASSING</span>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <span class="hero-tag fade-up fade-up-1">U8 / U10 Coaching Pack</span>
+      <h1 class="fade-up fade-up-2">Your players.<br><em>Better football.</em><br>Every session.</h1>
+      <p class="hero-body fade-up fade-up-3">Eight animated drills for grassroots coaches and parent volunteers. Watch the movement, read the notes, run the session. No experience needed.</p>
+      <div class="hero-actions fade-up fade-up-4">
+        <a href="#pricing" class="btn-primary">Get the pack — £9.99</a>
+        <a href="#whats-inside" class="btn-secondary">See what's included ↓</a>
       </div>
     </div>
-    <div class="arrow">›</div>
-  </a>
-
-  <a class="drill-card" href="drills/drill-02.html">
-    <div>
-      <div class="series-badge">SERIES 2 OF 3</div>
-      <div class="drill-num">DRILL 02 · PASSING</div>
-      <div class="drill-title">WALL PASS &<br>THIRD MAN RUN</div>
-      <div class="drill-meta">
-        <span class="pill">3 PLAYERS</span>
-        <span class="pill">15 MIN</span>
-        <span class="pill">PASSING</span>
+    <div class="hero-right fade-up fade-up-3">
+      <div class="anim-phone">
+        <div class="anim-phone-label">DRILL 01 — WALL PASS</div>
+        <svg id="heroSVG" width="405" height="720" viewBox="0 0 405 720"></svg>
+        <div class="anim-phone-controls">
+          <button class="phone-btn phone-play" id="heroPlay">▶ PLAY</button>
+          <button class="phone-btn phone-reset" id="heroReset">↺</button>
+        </div>
       </div>
     </div>
-    <div class="arrow">›</div>
-  </a>
+  </div>
+</section>
 
-  <a class="drill-card" href="drills/drill-03.html">
-    <div>
-      <div class="series-badge">SERIES 3 OF 3</div>
-      <div class="drill-num">DRILL 03 · ADVANCED</div>
-      <div class="drill-title">OVERLAP &<br>CUTBACK</div>
-      <div class="drill-meta">
-        <span class="pill">4 PLAYERS</span>
-        <span class="pill">20 MIN</span>
-        <span class="pill">ADVANCED</span>
-      </div>
-    </div>
-    <div class="arrow">›</div>
-  </a>
-
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <div class="trust-item"><span class="trust-icon">⚽</span> 8 fully animated drills</div>
+    <div class="trust-item"><span class="trust-icon">📱</span> Works on phone & tablet</div>
+    <div class="trust-item"><span class="trust-icon">📋</span> Full coaching notes included</div>
+    <div class="trust-item"><span class="trust-icon">✅</span> No app needed — opens in browser</div>
+    <div class="trust-item"><span class="trust-icon">🔄</span> Free updates as drills are added</div>
+  </div>
 </div>
 
-<footer>@DRILLIQ · #FOOTBALLCOACHING</footer>
+<!-- WHAT'S INSIDE -->
+<section class="inside-bg" id="whats-inside">
+  <div class="section-inner">
+    <span class="section-tag">What's inside</span>
+    <h2 class="section-title">8 drills. Every detail covered.</h2>
+    <p class="section-body">Each drill comes with a full animation you can play pitchside, plus setup instructions, coaching cues, progressions, and common mistakes — all written for coaches who are new to the game.</p>
+    <div class="drill-grid">
+      <div class="drill-card">
+        <div class="drill-card-num">DRILL 01</div>
+        <div class="drill-card-title">The Basic Wall Pass</div>
+        <div class="drill-card-meta"><span class="drill-tag cat-passing">Passing</span><span class="drill-tag">2 players</span><span class="drill-tag">10 min</span></div>
+      </div>
+      <div class="drill-card">
+        <div class="drill-card-num">DRILL 02</div>
+        <div class="drill-card-title">Wall Pass & Third Man Run</div>
+        <div class="drill-card-meta"><span class="drill-tag cat-passing">Passing</span><span class="drill-tag">3 players</span><span class="drill-tag">15 min</span></div>
+      </div>
+      <div class="drill-card">
+        <div class="drill-card-num">DRILL 03</div>
+        <div class="drill-card-title">Overlap & Cutback</div>
+        <div class="drill-card-meta"><span class="drill-tag cat-passing">Passing</span><span class="drill-tag">4 players</span><span class="drill-tag">20 min</span></div>
+      </div>
+      <div class="drill-card">
+        <div class="drill-card-num">DRILL 04</div>
+        <div class="drill-card-title">Carry, Draw & Release</div>
+        <div class="drill-card-meta"><span class="drill-tag cat-dribbling">Dribbling</span><span class="drill-tag">3 players</span><span class="drill-tag">15 min</span></div>
+      </div>
+      <div class="drill-card">
+        <div class="drill-card-num">DRILL 05</div>
+        <div class="drill-card-title">Pass Under Pressure</div>
+        <div class="drill-card-meta"><span class="drill-tag cat-passing">Passing</span><span class="drill-tag">4 players</span><span class="drill-tag">15 min</span></div>
+      </div>
+      <div class="drill-card">
+        <div class="drill-card-num">DRILL 06</div>
+        <div class="drill-card-title">Find the Free Man</div>
+        <div class="drill-card-meta"><span class="drill-tag cat-decision">Decision Making</span><span class="drill-tag">5 players</span><span class="drill-tag">20 min</span></div>
+      </div>
+      <div class="drill-card">
+        <div class="drill-card-num">DRILL 07</div>
+        <div class="drill-card-title">Near Post Run</div>
+        <div class="drill-card-meta"><span class="drill-tag cat-finishing">Finishing</span><span class="drill-tag">2 players</span><span class="drill-tag">10 min</span></div>
+      </div>
+      <div class="drill-card">
+        <div class="drill-card-num">DRILL 08</div>
+        <div class="drill-card-title">Far Post Attack</div>
+        <div class="drill-card-meta"><span class="drill-tag cat-finishing">Finishing</span><span class="drill-tag">4 players</span><span class="drill-tag">15 min</span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- HOW IT WORKS -->
+<section>
+  <div class="section-inner">
+    <span class="section-tag">How it works</span>
+    <h2 class="section-title">Open it. Watch it. Coach it.</h2>
+    <p class="section-body">No app to install. No account to create. Just one file that works on any phone, tablet, or laptop.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Buy & download</div>
+          <div class="step-desc">You get a single HTML file. Save it to your phone or tablet. It works completely offline — no internet needed on the day.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Watch the animation</div>
+          <div class="step-desc">Each drill has a live top-down animation. Hit play, watch the movement, understand the shape before you even put a cone down.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Read the notes</div>
+          <div class="step-desc">Setup, coaching cues, progressions and common mistakes — all in plain language. Written for people who love football, not coaching textbooks.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Run the session</div>
+          <div class="step-desc">Set up, play the animation for the players, and coach with confidence. Navigate between all 8 drills with a tap.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<section class="inside-bg">
+  <div class="section-inner">
+    <span class="section-tag">Every drill includes</span>
+    <h2 class="section-title">Everything you need pitchside.</h2>
+    <p class="section-body">Each of the 8 drills is a complete coaching resource, not just a diagram.</p>
+    <div class="features">
+      <div class="feature">
+        <span class="feature-icon">▶</span>
+        <div class="feature-title">Live animation</div>
+        <div class="feature-desc">A top-down animated drill you can play, pause, and replay at different speeds. Show the players directly on your phone — they get it immediately.</div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">📐</span>
+        <div class="feature-title">Setup guide</div>
+        <div class="feature-desc">Exact pitch size, number of cones, how to position players. Step by step. You can set up any drill in under two minutes.</div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">💬</span>
+        <div class="feature-title">Coaching cues</div>
+        <div class="feature-desc">What to say to your players at each phase. Real phrases, not jargon. Including the exact words to use when you need to correct something.</div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">📈</span>
+        <div class="feature-title">Progressions</div>
+        <div class="feature-desc">How to make each drill easier or harder depending on how players are getting on. Includes a clear signal for when to move to the next level.</div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🔍</span>
+        <div class="feature-title">Common mistakes</div>
+        <div class="feature-desc">The things that go wrong, why they happen, and exactly how to fix them. Saves you from standing there wondering what to say.</div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">📱</span>
+        <div class="feature-title">Works everywhere</div>
+        <div class="feature-desc">Phone, tablet, laptop — any browser, fully offline. No subscription, no login, no app store. Buy once, use every session.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-bg" id="pricing">
+  <div class="section-inner">
+    <div class="pricing-card">
+      <span class="price-tag">U8 / U10 Coaching Pack</span>
+      <div class="price"><sup>£</sup>9.99</div>
+      <div class="price-note">One-time purchase. Yours to keep.</div>
+      <div class="price-includes">
+        <div class="price-includes-title">What you get</div>
+        <div class="price-item"><span class="price-item-check">✓</span>8 fully animated drills covering passing, dribbling, decision-making and finishing</div>
+        <div class="price-item"><span class="price-item-check">✓</span>Full coaching notes for every drill — setup, cues, progressions, mistakes</div>
+        <div class="price-item"><span class="price-item-check">✓</span>Works offline on any phone, tablet or laptop</div>
+        <div class="price-item"><span class="price-item-check">✓</span>Written for new coaches and parent volunteers — no jargon</div>
+        <div class="price-item"><span class="price-item-check">✓</span>Free updates when new drills are added to the pack</div>
+      </div>
+      <a href="#" class="btn-buy">Buy Now — £9.99</a>
+      <p class="price-guarantee">Single file download. No app. No subscription. Works on any device.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="section-inner">
+    <span class="section-tag">Questions</span>
+    <h2 class="section-title" style="text-align:center;margin-bottom:48px;">Common questions</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">Do I need to install anything? <span class="faq-icon">+</span></div>
+        <div class="faq-a">No. You get a single HTML file. Open it in any browser on your phone, tablet or laptop. It works completely offline — no internet needed on match day or at training.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is this suitable if I've never coached before? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Yes — that's exactly who it's written for. All the coaching notes use plain everyday language. No qualifications needed, no jargon. If you know roughly what a wall pass is, you have enough background to use this pack confidently.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What age group is this for? <span class="faq-icon">+</span></div>
+        <div class="faq-a">The drills and coaching notes are written for U8 and U10 players — roughly ages 7 to 10. The movements are simple enough for beginners but still useful as players develop. More age group packs are planned.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I use it on my phone during training? <span class="faq-icon">+</span></div>
+        <div class="faq-a">That's exactly how it's designed to be used. The layout is mobile-first — large text, big tap targets, easy to navigate with one hand. Save the file to your home screen and it opens like an app.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Will more drills be added? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Yes. The U8/U10 pack is being built toward 20 drills. Everyone who buys now gets all future drills added to their pack at no extra cost.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I share it with other coaches at my club? <span class="faq-icon">+</span></div>
+        <div class="faq-a">The pack is licensed for personal use. If your club wants to use it across multiple coaches, get in touch about a club licence.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">DRILL<span>IQ</span></div>
+  <p class="footer-sub">Grassroots football coaching, animated.</p>
+</footer>
+
+<script>
+// ─── DrillIQ Animation Engine ───────────────────────────────────────────────
+// Shared by all drill pages. Do not edit unless changing core behaviour.
+
+const W=405,H=720,PITCH_X=20,PITCH_Y=210,PITCH_W=365,PITCH_H=280,PLAYER_R=13;
+
+function lerp(a,b,t){return a+(b-a)*t;}
+function easeInOut(t){return t<0.5?2*t*t:-1+(4-2*t)*t;}
+function toCanvas(pt){return{x:PITCH_X+pt.x,y:PITCH_Y+pt.y};}
+
+function buildSegMeta(segments){
+  let total=0;
+  return segments.map(seg=>{
+    const start=total,moveEnd=start+seg.moveDuration,end=moveEnd+seg.pauseDuration;
+    total=end;
+    return{...seg,start,moveEnd,end};
+  });
+}
+
+function interpState(sA,sB,localT){
+  const et=easeInOut(Math.max(0,Math.min(1,localT)));
+  let arrowOpacity,arrows;
+  if(localT<0.38){arrowOpacity=1;arrows=sA.arrows;}
+  else if(localT<0.52){arrowOpacity=Math.max(0,1-(localT-0.38)/0.14);arrows=sA.arrows;}
+  else{arrows=sB.arrows;arrowOpacity=Math.min(1,(localT-0.52)/0.2);}
+  return{
+    label:localT<0.5?sA.label:sB.label,
+    players:sA.players.map((p,i)=>({x:lerp(p.x,sB.players[i].x,et),y:lerp(p.y,sB.players[i].y,et)})),
+    ball:{x:lerp(sA.ball.x,sB.ball.x,et),y:lerp(sA.ball.y,sB.ball.y,et)},
+    arrows,arrowOpacity,isPause:false
+  };
+}
+
+function getAnimState(elapsedMs,states,segMeta,totalDuration){
+  const t=elapsedMs%totalDuration;
+  for(const seg of segMeta){
+    if(t>=seg.start&&t<seg.end){
+      const sA=states[seg.from],sB=states[seg.to];
+      if(t<seg.moveEnd)return interpState(sA,sB,(t-seg.start)/seg.moveDuration);
+      return{...sB,arrowOpacity:1,isPause:true};
+    }
+  }
+  return{...states[Object.keys(states)[0]],arrowOpacity:1,isPause:false};
+}
+
+function resolvePoint(ref,players){
+  return typeof ref==="number"?toCanvas(players[ref]):toCanvas(ref);
+}
+
+function svgEl(tag,attrs,text){
+  const el=document.createElementNS("http://www.w3.org/2000/svg",tag);
+  for(const[k,v]of Object.entries(attrs))el.setAttribute(k,v);
+  if(text!==undefined)el.textContent=text;
+  return el;
+}
+
+function drawArrow(parent,arrow,players,opacity){
+  const rF=resolvePoint(arrow.from,players),rT=resolvePoint(arrow.to,players);
+  const dx=rT.x-rF.x,dy=rT.y-rF.y,dist=Math.sqrt(dx*dx+dy*dy)||1;
+  const ux=dx/dist,uy=dy/dist;
+  const s=typeof arrow.from==="number"?PLAYER_R+1:0;
+  const e=typeof arrow.to==="number"?PLAYER_R+1:0;
+  const x1=rF.x+ux*s,y1=rF.y+uy*s,x2=rT.x-ux*e,y2=rT.y-uy*e;
+  const hs=9,ex=x2-ux*hs,ey=y2-uy*hs,px=-uy*hs*0.5,py=ux*hs*0.5;
+  const g=document.createElementNS("http://www.w3.org/2000/svg","g");
+  g.setAttribute("opacity",opacity);
+  const line=document.createElementNS("http://www.w3.org/2000/svg","line");
+  line.setAttribute("x1",x1);line.setAttribute("y1",y1);line.setAttribute("x2",ex);line.setAttribute("y2",ey);
+  line.setAttribute("stroke",arrow.color);line.setAttribute("stroke-width",arrow.dashed?"1.6":"2.5");
+  if(arrow.dashed)line.setAttribute("stroke-dasharray","6 4");
+  line.setAttribute("stroke-linecap","round");
+  g.appendChild(line);
+  if(!arrow.dashed){
+    const poly=document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    poly.setAttribute("points",`${x2},${y2} ${ex+px},${ey+py} ${ex-px},${ey-py}`);
+    poly.setAttribute("fill",arrow.color);g.appendChild(poly);
+  } else {
+    const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c.setAttribute("cx",x2);c.setAttribute("cy",y2);c.setAttribute("r",3);c.setAttribute("fill",arrow.color);g.appendChild(c);
+  }
+  parent.appendChild(g);
+}
+
+function drawBall(parent,x,y,spinAngle){
+  const r=9;
+  parent.appendChild(svgEl("ellipse",{cx:x+2,cy:y+r+1,rx:r*0.75,ry:2.5,fill:"rgba(0,0,0,0.35)"}));
+  parent.appendChild(svgEl("circle",{cx:x,cy:y,r,fill:"#f0f0f0"}));
+  const rot=document.createElementNS("http://www.w3.org/2000/svg","g");
+  rot.setAttribute("transform",`rotate(${spinAngle},${x},${y})`);
+  rot.appendChild(svgEl("circle",{cx:x,cy:y,r:3,fill:"#111"}));
+  [0,72,144,216,288].forEach(deg=>{
+    const rad=deg*Math.PI/180,px2=x+Math.cos(rad)*5.5,py2=y+Math.sin(rad)*5.5;
+    const el=svgEl("ellipse",{cx:px2,cy:py2,rx:2.2,ry:1.5,fill:"#111"});
+    el.setAttribute("transform",`rotate(${deg},${px2},${py2})`);rot.appendChild(el);
+  });
+  parent.appendChild(rot);
+  parent.appendChild(svgEl("circle",{cx:x,cy:y,r,fill:"none",stroke:"#222","stroke-width":"0.8"}));
+  parent.appendChild(svgEl("circle",{cx:x-3,cy:y-3,r:2.2,fill:"rgba(255,255,255,0.55)"}));
+}
+
+function drawPlayer(parent,cx,cy,color,label){
+  parent.appendChild(svgEl("circle",{cx:cx+1.5,cy:cy+2.5,r:PLAYER_R,fill:"rgba(0,0,0,0.5)"}));
+  parent.appendChild(svgEl("circle",{cx,cy,r:PLAYER_R,fill:color}));
+  parent.appendChild(svgEl("circle",{cx,cy,r:PLAYER_R,fill:"none",stroke:"rgba(255,255,255,0.25)","stroke-width":"1.5"}));
+  const t=svgEl("text",{x:cx,y:cy+5,"text-anchor":"middle",fill:"#000","font-size":"12","font-weight":"900","font-family":"'Barlow Condensed',sans-serif"},label);
+  parent.appendChild(t);
+}
+
+// ─── Build the static (non-animating) parts of the SVG frame ────────────────
+function buildStaticSVG(svg, config){
+  const{drillNum,drillCat,title1,title2,meta,seriesLabel,players,phaseDots,startPositions,coneGate}=config;
+  const ns="http://www.w3.org/2000/svg";
+
+  // defs
+  const defs=document.createElementNS(ns,"defs");
+  defs.innerHTML=`
+    <radialGradient id="bgGrad" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#0d1530"/>
+      <stop offset="100%" stop-color="#080c18"/>
+    </radialGradient>
+    <filter id="playerGlow">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="pitchClip">
+      <rect x="${PITCH_X}" y="${PITCH_Y}" width="${PITCH_W}" height="${PITCH_H}"/>
+    </clipPath>`;
+  svg.appendChild(defs);
+
+  // background
+  svg.appendChild(svgEl("rect",{width:W,height:H,fill:"url(#bgGrad)"}));
+  for(let i=0;i<8;i++) svg.appendChild(svgEl("line",{x1:0,y1:i*90,x2:W,y2:i*90,stroke:"rgba(180,255,80,0.03)","stroke-width":1}));
+
+  // series badge
+  svg.appendChild(svgEl("rect",{x:22,y:8,width:62,height:16,rx:3,fill:"rgba(180,255,80,0.08)",stroke:"rgba(180,255,80,0.2)","stroke-width":1}));
+  svg.appendChild(svgEl("text",{x:53,y:20,"text-anchor":"middle",fill:"rgba(180,255,80,0.6)","font-size":9,"font-weight":700,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":2},seriesLabel));
+  svg.appendChild(svgEl("line",{x1:0,y1:62,x2:W,y2:62,stroke:"rgba(180,255,80,0.15)","stroke-width":1}));
+
+  // logo — tspans so DRILL and IQ sit flush as one word
+  const logoEl=document.createElementNS(ns,"text");
+  logoEl.setAttribute("x",22);logoEl.setAttribute("y",46);
+  logoEl.setAttribute("font-size",28);logoEl.setAttribute("font-weight",900);
+  logoEl.setAttribute("font-family","'Barlow Condensed',sans-serif");
+  const ts1=document.createElementNS(ns,"tspan");ts1.setAttribute("fill","#B4FF50");ts1.setAttribute("letter-spacing",1);ts1.textContent="DRILL";
+  const ts2=document.createElementNS(ns,"tspan");ts2.setAttribute("fill","#ffffff");ts2.setAttribute("letter-spacing",2);ts2.textContent="IQ";
+  logoEl.appendChild(ts1);logoEl.appendChild(ts2);svg.appendChild(logoEl);
+
+  // age badge
+  svg.appendChild(svgEl("rect",{x:W-80,y:22,width:58,height:24,rx:12,fill:"rgba(180,255,80,0.12)",stroke:"rgba(180,255,80,0.3)","stroke-width":1}));
+  svg.appendChild(svgEl("text",{x:W-51,y:38,"text-anchor":"middle",fill:"#B4FF50","font-size":10,"font-weight":700,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":2},"U8 · U10"));
+
+  // drill label + title
+  svg.appendChild(svgEl("text",{x:22,y:86,fill:"rgba(180,255,80,0.55)","font-size":10,"font-weight":700,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":4},`DRILL ${drillNum} · ${drillCat}`));
+  svg.appendChild(svgEl("text",{x:22,y:120,fill:"#ffffff","font-size":38,"font-weight":900,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":1},title1));
+  svg.appendChild(svgEl("text",{x:22,y:155,fill:"#ffffff","font-size":38,"font-weight":900,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":1},title2));
+
+  // meta pills
+  meta.forEach((tag,i)=>{
+    svg.appendChild(svgEl("rect",{x:22+i*88,y:163,width:80,height:20,rx:4,fill:"rgba(255,255,255,0.04)",stroke:"rgba(255,255,255,0.08)","stroke-width":1}));
+    svg.appendChild(svgEl("text",{x:22+i*88+40,y:177,"text-anchor":"middle",fill:"rgba(255,255,255,0.4)","font-size":9,"font-weight":600,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":2},tag));
+  });
+
+  // pitch stripes + markings
+  const pw=PITCH_W,ph=PITCH_H,ox=PITCH_X,oy=PITCH_Y;
+  for(let i=0;i<Math.ceil(pw/28);i++) svg.appendChild(svgEl("rect",{x:ox+i*28,y:oy,width:14,height:ph,fill:i%2===0?"#0d1f0d":"#0b1a0b"}));
+  svg.appendChild(svgEl("rect",{x:ox,y:oy,width:pw,height:ph,fill:"none",stroke:"#1a5c2a","stroke-width":1.2}));
+  svg.appendChild(svgEl("line",{x1:ox+pw/2,y1:oy,x2:ox+pw/2,y2:oy+ph,stroke:"#1a5c2a","stroke-width":1}));
+  svg.appendChild(svgEl("circle",{cx:ox+pw/2,cy:oy+ph/2,r:36,fill:"none",stroke:"#1a5c2a","stroke-width":1}));
+  svg.appendChild(svgEl("circle",{cx:ox+pw/2,cy:oy+ph/2,r:2,fill:"#1a5c2a"}));
+  svg.appendChild(svgEl("rect",{x:ox,y:oy+ph*0.25,width:pw*0.18,height:ph*0.5,fill:"none",stroke:"#1a5c2a","stroke-width":1}));
+  svg.appendChild(svgEl("rect",{x:ox+pw*0.82,y:oy+ph*0.25,width:pw*0.18,height:ph*0.5,fill:"none",stroke:"#1a5c2a","stroke-width":1}));
+  svg.appendChild(svgEl("rect",{x:ox,y:oy+ph*0.37,width:pw*0.08,height:ph*0.26,fill:"none",stroke:"#1a5c2a","stroke-width":0.8}));
+  svg.appendChild(svgEl("rect",{x:ox+pw*0.92,y:oy+ph*0.37,width:pw*0.08,height:ph*0.26,fill:"none",stroke:"#1a5c2a","stroke-width":0.8}));
+  svg.appendChild(svgEl("rect",{x:ox-12,y:oy+ph*0.37,width:12,height:ph*0.26,fill:"none",stroke:"rgba(255,255,255,0.4)","stroke-width":1.2}));
+  svg.appendChild(svgEl("rect",{x:ox+pw,y:oy+ph*0.37,width:12,height:ph*0.26,fill:"none",stroke:"rgba(255,255,255,0.4)","stroke-width":1.2}));
+  svg.appendChild(svgEl("circle",{cx:ox+pw*0.14,cy:oy+ph*0.5,r:2.2,fill:"#1a5c2a"}));
+  svg.appendChild(svgEl("circle",{cx:ox+pw*0.86,cy:oy+ph*0.5,r:2.2,fill:"#1a5c2a"}));
+
+  // start position rings — dashed circle in player colour at initial position
+  if(startPositions){
+    startPositions.forEach((p,i)=>{
+      const col=players[i]?players[i].color:"#ffffff";
+      svg.appendChild(svgEl("circle",{cx:PITCH_X+p.x,cy:PITCH_Y+p.y,r:PLAYER_R+5,fill:"none",stroke:col,"stroke-width":1.2,"stroke-dasharray":"4 3",opacity:0.35}));
+    });
+  }
+
+  // cone gate — two orange triangles marking the finishing zone near goal mouth
+  if(coneGate){
+    coneGate.forEach(c=>{
+      const cx3=PITCH_X+c.x,cy3=PITCH_Y+c.y,cs=7;
+      svg.appendChild(svgEl("polygon",{points:`${cx3},${cy3-cs} ${cx3-cs*0.6},${cy3+cs*0.5} ${cx3+cs*0.6},${cy3+cs*0.5}`,fill:"#FF8C00",opacity:0.85}));
+      svg.appendChild(svgEl("polygon",{points:`${cx3},${cy3-cs} ${cx3-cs*0.6},${cy3+cs*0.5} ${cx3+cs*0.6},${cy3+cs*0.5}`,fill:"none",stroke:"rgba(255,255,255,0.35)","stroke-width":0.8}));
+    });
+  }
+
+  // dynamic layer — cleared and redrawn every frame
+  const dl=document.createElementNS(ns,"g");dl.id="dynamicLayer";svg.appendChild(dl);
+
+  // goal flash overlay
+  const go=document.createElementNS(ns,"rect");
+  go.id="goalOverlay";go.setAttribute("width",W);go.setAttribute("height",H);
+  go.setAttribute("fill","rgba(180,255,80,0.05)");go.setAttribute("opacity",0);
+  svg.appendChild(go);
+
+  // phase bar background
+  svg.appendChild(svgEl("rect",{x:0,y:PITCH_Y+PITCH_H,width:W,height:1,fill:"rgba(180,255,80,0.12)"}));
+  svg.appendChild(svgEl("rect",{x:0,y:PITCH_Y+PITCH_H+1,width:W,height:72,fill:"rgba(10,15,30,0.95)"}));
+
+  // phase step dots
+  const dotsGroup=document.createElementNS(ns,"g");dotsGroup.id="dotsGroup";svg.appendChild(dotsGroup);
+  const spacing=phaseDots<=4?32:28,wA=phaseDots<=4?28:24,wI=phaseDots<=4?20:16;
+  for(let i=0;i<phaseDots;i++){
+    const dot=document.createElementNS(ns,"rect");
+    dot.setAttribute("x",22+i*spacing);dot.setAttribute("y",PITCH_Y+PITCH_H+14);
+    dot.setAttribute("width",wI);dot.setAttribute("height",3);dot.setAttribute("rx",1.5);
+    dot.setAttribute("fill","rgba(180,255,80,0.18)");dot.id=`dot_${i}`;dotsGroup.appendChild(dot);
+  }
+
+  // hold badge
+  const hg=document.createElementNS(ns,"g");hg.id="holdGroup";hg.setAttribute("opacity",0);svg.appendChild(hg);
+  hg.appendChild(svgEl("rect",{x:W-78,y:PITCH_Y+PITCH_H+8,width:56,height:18,rx:9,fill:"rgba(180,255,80,0.1)",stroke:"rgba(180,255,80,0.25)","stroke-width":1}));
+  hg.appendChild(svgEl("text",{x:W-50,y:PITCH_Y+PITCH_H+20,"text-anchor":"middle",fill:"#B4FF50","font-size":9,"font-weight":700,"letter-spacing":1.5,"font-family":"'Barlow Condensed',sans-serif"},"● HOLD"));
+
+  // phase label text
+  const pl=document.createElementNS(ns,"text");
+  pl.id="phaseLabel";pl.setAttribute("x",22);pl.setAttribute("y",PITCH_Y+PITCH_H+36);
+  pl.setAttribute("fill","#ffffff");pl.setAttribute("font-size",18);pl.setAttribute("font-weight",900);
+  pl.setAttribute("font-family","'Barlow Condensed',sans-serif");pl.setAttribute("letter-spacing",1);
+  svg.appendChild(pl);
+
+  // footer
+  svg.appendChild(svgEl("rect",{x:0,y:PITCH_Y+PITCH_H+73,width:W,height:1,fill:"rgba(180,255,80,0.08)"}));
+  svg.appendChild(svgEl("rect",{x:0,y:PITCH_Y+PITCH_H+74,width:W,height:56,fill:"rgba(8,12,24,0.98)"}));
+
+  // legend — pass
+  svg.appendChild(svgEl("line",{x1:22,y1:PITCH_Y+PITCH_H+95,x2:50,y2:PITCH_Y+PITCH_H+95,stroke:"#B4FF50","stroke-width":2}));
+  svg.appendChild(svgEl("polygon",{points:`50,${PITCH_Y+PITCH_H+92} 58,${PITCH_Y+PITCH_H+95} 50,${PITCH_Y+PITCH_H+98}`,fill:"#B4FF50"}));
+  svg.appendChild(svgEl("text",{x:64,y:PITCH_Y+PITCH_H+99,fill:"rgba(255,255,255,0.5)","font-size":10,"font-weight":600,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":1.5},"PASS"));
+  // legend — run
+  svg.appendChild(svgEl("line",{x1:114,y1:PITCH_Y+PITCH_H+95,x2:142,y2:PITCH_Y+PITCH_H+95,stroke:"#7aaff0","stroke-width":1.5,"stroke-dasharray":"5 3"}));
+  svg.appendChild(svgEl("circle",{cx:146,cy:PITCH_Y+PITCH_H+95,r:2.5,fill:"#7aaff0"}));
+  svg.appendChild(svgEl("text",{x:154,y:PITCH_Y+PITCH_H+99,fill:"rgba(255,255,255,0.5)","font-size":10,"font-weight":600,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":1.5},"RUN"));
+
+  // player colour keys
+  const keyX=players.length<=2?220:players.length===3?220:205;
+  const keySpacing=players.length<=3?58:48;
+  players.forEach((p,i)=>{
+    svg.appendChild(svgEl("circle",{cx:keyX+i*keySpacing,cy:PITCH_Y+PITCH_H+95,r:7,fill:p.color}));
+    svg.appendChild(svgEl("text",{x:keyX+i*keySpacing,y:PITCH_Y+PITCH_H+99,"text-anchor":"middle",fill:"#000","font-size":8,"font-weight":900,"font-family":"'Barlow Condensed',sans-serif"},p.label));
+  });
+
+  // handle
+  svg.appendChild(svgEl("text",{x:W/2,y:PITCH_Y+PITCH_H+122,"text-anchor":"middle",fill:"rgba(180,255,80,0.25)","font-size":10,"font-weight":700,"font-family":"'Barlow Condensed',sans-serif","letter-spacing":3},"@DRILLIQ · #FOOTBALLCOACHING"));
+
+  // progress bar track + fill
+  svg.appendChild(svgEl("rect",{x:0,y:H-4,width:W,height:4,fill:"rgba(180,255,80,0.08)"}));
+  const pb=document.createElementNS(ns,"rect");
+  pb.id="progressBar";pb.setAttribute("x",0);pb.setAttribute("y",H-4);pb.setAttribute("width",0);pb.setAttribute("height",4);pb.setAttribute("fill","#B4FF50");pb.setAttribute("opacity",0.7);
+  svg.appendChild(pb);
+}
+
+// ─── Mount and run the animation loop for a drill ───────────────────────────
+function runDrill(config){
+  const{states,segments,players,goalThreshold,phaseDots,startBall}=config;
+  const segMeta=buildSegMeta(segments);
+  const totalDuration=segMeta[segMeta.length-1].end;
+
+  const svg=document.getElementById("mainSVG");
+  buildStaticSVG(svg,config);
+
+  let playing=false,elapsed=0,speed=1,lastTs=null,spinAngle=0;
+  let prevBall=toCanvas(startBall||{x:0,y:0});
+
+  function render(state,progress){
+    const isGoal=progress>goalThreshold;
+    const ns="http://www.w3.org/2000/svg";
+    const dl=document.getElementById("dynamicLayer");
+    while(dl.firstChild)dl.removeChild(dl.firstChild);
+
+    const clip=document.createElementNS(ns,"g");
+    clip.setAttribute("clip-path","url(#pitchClip)");
+
+    if(state.arrows)state.arrows.forEach(a=>drawArrow(clip,a,state.players,state.arrowOpacity??1));
+    if(state.players)state.players.forEach((p,i)=>{
+      const cp=toCanvas(p),g=document.createElementNS(ns,"g");
+      g.setAttribute("filter","url(#playerGlow)");
+      drawPlayer(g,cp.x,cp.y,players[i].color,players[i].label);
+      clip.appendChild(g);
+    });
+    if(state.ball){
+      const bc=toCanvas(state.ball);
+      spinAngle+=Math.sqrt((bc.x-prevBall.x)**2+(bc.y-prevBall.y)**2)*4;
+      prevBall={x:bc.x,y:bc.y};
+      drawBall(clip,bc.x,bc.y,spinAngle);
+    }
+    dl.appendChild(clip);
+
+    document.getElementById("goalOverlay").setAttribute("opacity",0);
+
+    // step dots
+    const t=elapsed%totalDuration;
+    let phaseIdx=0;
+    for(let i=0;i<segMeta.length;i++){if(t<segMeta[i].end){phaseIdx=i;break;}}
+    const sp=phaseDots<=4?32:28,wA2=phaseDots<=4?28:24,wI2=phaseDots<=4?20:16;
+    for(let i=0;i<phaseDots;i++){
+      const d=document.getElementById(`dot_${i}`);
+      if(d){d.setAttribute("width",i===phaseIdx?wA2:wI2);d.setAttribute("fill",i===phaseIdx?"#B4FF50":"rgba(180,255,80,0.18)");}
+    }
+
+    document.getElementById("holdGroup").setAttribute("opacity",(state.isPause&&!isGoal)?1:0);
+    document.getElementById("phaseLabel").textContent=isGoal?"⚽ GOAL! RESET & REPEAT":(state.label||"").toUpperCase();
+    document.getElementById("progressBar").setAttribute("width",W*progress);
+  }
+
+  function tick(ts){
+    if(lastTs!==null)elapsed+=(ts-lastTs)*speed;
+    lastTs=ts;
+    render(getAnimState(elapsed,states,segMeta,totalDuration),(elapsed%totalDuration)/totalDuration);
+    if(playing)requestAnimationFrame(tick);
+  }
+
+  // controls
+  const btnPlay=document.getElementById("btnPlay");
+  btnPlay.addEventListener("click",()=>{
+    playing=!playing;
+    btnPlay.textContent=playing?"⏸ PAUSE":"▶ PLAY";
+    btnPlay.classList.toggle("paused",playing);
+    if(playing){lastTs=null;requestAnimationFrame(tick);}
+  });
+  document.getElementById("btnReset").addEventListener("click",()=>{
+    playing=false;elapsed=0;lastTs=null;spinAngle=0;
+    prevBall=toCanvas(startBall||{x:0,y:0});
+    btnPlay.textContent="▶ PLAY";btnPlay.classList.remove("paused");
+    render(getAnimState(0,states,segMeta,totalDuration),0);
+  });
+  document.querySelectorAll(".btn-speed").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      speed=parseFloat(btn.dataset.speed);
+      document.querySelectorAll(".btn-speed").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
+
+  // initial render
+  render(getAnimState(0,states,segMeta,totalDuration),0);
+}
+
+
+// Hero animation
+runDrill({
+  drillNum:"01", drillCat:"PASSING", title1:"THE BASIC", title2:"WALL PASS",
+  meta:["2 PLAYERS","10 MIN","PASSING"], seriesLabel:"SERIES 1 OF 3",
+  phaseDots:3, goalThreshold:0.87,
+  players:[{label:"1",color:"#FF6B35"},{label:"2",color:"#B4FF50"}],
+  startPositions:[{x:80,y:140},{x:230,y:80}],
+  coneGate:[{x:350,y:112},{x:350,y:168}],
+  startBall:{x:80,y:140},
+  states:{
+    phase0:{label:"P1 passes to P2",players:[{x:80,y:140},{x:230,y:80}],ball:{x:80,y:140},
+      arrows:[{from:0,to:1,dashed:false,color:"#B4FF50"},{from:0,to:{x:290,y:140},dashed:true,color:"#FF6B35"}]},
+    phase1:{label:"P2 returns first time",players:[{x:185,y:140},{x:230,y:80}],ball:{x:230,y:80},
+      arrows:[{from:1,to:{x:295,y:138},dashed:false,color:"#FF6B35"},{from:0,to:{x:310,y:138},dashed:true,color:"#FF6B35"}]},
+    phase2:{label:"P1 runs onto it & shoots!",players:[{x:310,y:138},{x:255,y:90}],ball:{x:310,y:138},
+      arrows:[{from:0,to:{x:375,y:140},dashed:false,color:"#FF6B35"}]},
+    phase3:{label:"GOAL!",players:[{x:310,y:138},{x:255,y:90}],ball:{x:378,y:140},arrows:[]},
+  },
+  segments:[
+    {from:"phase0",to:"phase1",moveDuration:1600,pauseDuration:500},
+    {from:"phase1",to:"phase2",moveDuration:1600,pauseDuration:500},
+    {from:"phase2",to:"phase3",moveDuration:1100,pauseDuration:900},
+  ],
+});
+
+// Wire up hero controls manually
+document.getElementById('heroPlay').addEventListener('click', () => {
+  document.getElementById('btnPlay') && document.getElementById('btnPlay').click();
+});
+document.getElementById('heroReset').addEventListener('click', () => {
+  document.getElementById('btnReset') && document.getElementById('btnReset').click();
+});
+
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+</script>
 </body>
 </html>
